@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BuiltByWho — Websites, Shipped Fast</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --bg-alt:#131316;
+    --bg-card:#18181c;
+    --red:#ff1e3c;
+    --red-dim:#c4172f;
+    --neon:#c8ff3d;
+    --white:#f5f5f2;
+    --gray:#8c8c93;
+    --gray-dim:#5a5a60;
+    --line:#28282d;
+    --radius:2px;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--white);
+    font-family:'Inter',sans-serif;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    color:var(--red);
+    text-transform:uppercase;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+    font-weight:600;
+  }
+  .eyebrow::before{content:'';width:22px;height:2px;background:var(--red);display:inline-block;}
+  h1,h2,h3{font-family:'Anton',sans-serif;font-weight:400;letter-spacing:0.01em;line-height:0.95;text-transform:uppercase;}
+  ::selection{background:var(--red);color:var(--white);}
+  :focus-visible{outline:2px solid var(--neon);outline-offset:3px;}
+
+  /* ---------- NAV ---------- */
+  header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(10,10,11,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px 32px;max-width:1240px;margin:0 auto;
+  }
+  .logo{
+    font-family:'Anton',sans-serif;font-size:22px;letter-spacing:0.02em;
+    text-transform:uppercase;
+  }
+  .logo span{color:var(--red);}
+  .nav-links{display:flex;gap:36px;list-style:none;}
+  .nav-links a{
+    font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.06em;
+    color:var(--gray);text-transform:uppercase;transition:color 0.2s;
+  }
+  .nav-links a:hover{color:var(--white);}
+  .nav-cta{
+    font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+    letter-spacing:0.06em;text-transform:uppercase;
+    background:var(--red);color:var(--bg);padding:11px 20px;border-radius:var(--radius);
+    transition:background 0.2s;white-space:nowrap;
+  }
+  .nav-cta:hover{background:var(--neon);}
+  .burger{display:none;background:none;border:none;color:var(--white);font-size:24px;cursor:pointer;}
+  @media(max-width:860px){
+    .nav-links{display:none;}
+    .nav-cta{display:none;}
+    .burger{display:block;}
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    display:grid;grid-template-columns:1.1fr 1fr;gap:50px;
+    padding:90px 32px 80px;max-width:1240px;margin:0 auto;align-items:center;
+  }
+  .hero h1{font-size:clamp(44px,6.2vw,84px);}
+  .hero h1 .accent{color:var(--red);}
+  .hero p{
+    color:var(--gray);font-size:17px;line-height:1.6;max-width:460px;margin:26px 0 34px;
+  }
+  .btn-row{display:flex;gap:16px;flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;
+    letter-spacing:0.05em;text-transform:uppercase;padding:16px 26px;border-radius:var(--radius);
+    transition:all 0.2s;display:inline-flex;align-items:center;gap:8px;
+  }
+  .btn-primary{background:var(--red);color:var(--bg);border:1px solid var(--red);}
+  .btn-primary:hover{background:transparent;color:var(--red);}
+  .btn-outline{border:1px solid var(--line);color:var(--white);}
+  .btn-outline:hover{border-color:var(--neon);color:var(--neon);}
+
+  /* terminal */
+  .terminal{
+    background:var(--bg-alt);border:1px solid var(--line);border-radius:8px;
+    overflow:hidden;box-shadow:0 30px 80px -20px rgba(255,30,60,0.15);
+  }
+  .term-bar{
+    display:flex;align-items:center;gap:8px;padding:12px 16px;
+    background:#0d0d0f;border-bottom:1px solid var(--line);
+  }
+  .term-dot{width:10px;height:10px;border-radius:50%;}
+  .term-bar .term-title{
+    margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gray-dim);
+  }
+  .term-body{
+    padding:22px 20px;font-family:'JetBrains Mono',monospace;font-size:13.5px;line-height:1.9;
+    min-height:280px;color:#d4d4d8;
+  }
+  .term-body .prompt{color:var(--neon);}
+  .term-body .comment{color:var(--gray-dim);}
+  .term-body .ok{color:var(--neon);}
+  .term-body .tag{color:var(--red);}
+  .cursor{display:inline-block;width:8px;height:15px;background:var(--neon);vertical-align:middle;margin-left:2px;animation:blink 1s steps(1) infinite;}
+  @keyframes blink{50%{opacity:0;}}
+
+  @media(max-width:860px){
+    .hero{grid-template-columns:1fr;padding-top:50px;}
+  }
+
+  /* ---------- MARQUEE ---------- */
+  .marquee-strip{
+    background:var(--red);border-top:1px solid #000;border-bottom:1px solid #000;
+    padding:14px 0;overflow:hidden;white-space:nowrap;
+  }
+  .marquee-track{display:inline-block;animation:scroll-left 22s linear infinite;}
+  .marquee-track span{
+    font-family:'Anton',sans-serif;font-size:20px;color:var(--bg);text-transform:uppercase;
+    letter-spacing:0.03em;margin-right:40px;
+  }
+  @keyframes scroll-left{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  /* ---------- SECTION GENERIC ---------- */
+  section{padding:100px 0;}
+  .section-head{max-width:640px;margin-bottom:56px;}
+  .section-head h2{font-size:clamp(32px,4.4vw,54px);}
+  .section-head p{color:var(--gray);margin-top:16px;font-size:16px;line-height:1.6;}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- SERVICES ---------- */
+  .services-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .service-card{background:var(--bg);padding:34px 26px;transition:background 0.25s;}
+  .service-card:hover{background:var(--bg-card);}
+  .service-icon{font-size:26px;margin-bottom:22px;color:var(--red);}
+  .service-card h3{font-size:19px;text-transform:none;margin-bottom:10px;letter-spacing:0;}
+  .service-card p{color:var(--gray);font-size:14px;line-height:1.55;}
+  @media(max-width:860px){.services-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:520px){.services-grid{grid-template-columns:1fr;}}
+
+  /* ---------- WORK ---------- */
+  .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .work-card{
+    border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg-alt);
+    transition:transform 0.25s,border-color 0.25s;
+  }
+  .work-card:hover{transform:translateY(-6px);border-color:var(--red);}
+  .work-thumb{
+    height:180px;position:relative;overflow:hidden;
+    background:
+      repeating-linear-gradient(135deg, #1a1a1e 0 2px, transparent 2px 14px),
+      linear-gradient(135deg,#1c1c20,#101012);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .work-thumb::after{
+    content:'</>';font-family:'JetBrains Mono',monospace;font-size:34px;color:var(--gray-dim);
+  }
+  .work-info{padding:20px 22px;}
+  .work-tag{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:0.08em;
+    color:var(--neon);text-transform:uppercase;margin-bottom:8px;display:block;
+  }
+  .work-info h3{font-size:18px;text-transform:none;letter-spacing:0;margin-bottom:6px;}
+  .work-info p{color:var(--gray);font-size:13.5px;}
+  .work-note{
+    margin-top:36px;color:var(--gray-dim);font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  }
+  @media(max-width:860px){.work-grid{grid-template-columns:1fr;}}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  .founder-card{
+    border:1px solid var(--line);border-radius:6px;padding:32px;background:var(--bg-alt);
+    display:flex;gap:22px;
+  }
+  .avatar{
+    width:64px;height:64px;border-radius:50%;flex-shrink:0;
+    background:linear-gradient(135deg,var(--red),#7a0f1e);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Anton',sans-serif;font-size:22px;color:var(--white);
+  }
+  .founder-card h3{font-size:19px;text-transform:none;letter-spacing:0;margin-bottom:4px;}
+  .founder-role{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--red);
+    text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px;display:block;
+  }
+  .founder-card p{color:var(--gray);font-size:14px;line-height:1.6;}
+  @media(max-width:700px){.about-grid{grid-template-columns:1fr;}}
+
+  /* ---------- PRICING ---------- */
+  .pricing-band{
+    border:1px solid var(--line);border-radius:8px;padding:56px;
+    background:linear-gradient(135deg,var(--bg-alt),var(--bg));
+    display:flex;justify-content:space-between;align-items:center;gap:40px;flex-wrap:wrap;
+  }
+  .price-tag{font-family:'Anton',sans-serif;font-size:56px;color:var(--white);}
+  .price-tag span{color:var(--red);}
+  .pricing-band .price-sub{color:var(--gray);font-size:14px;margin-top:6px;font-family:'JetBrains Mono',monospace;}
+  .price-list{list-style:none;display:flex;flex-direction:column;gap:10px;}
+  .price-list li{font-size:14.5px;color:var(--gray);display:flex;align-items:center;gap:10px;}
+  .price-list li::before{content:'—';color:var(--neon);}
+
+  /* ---------- TESTIMONIALS ---------- */
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .testi-card{border:1px solid var(--line);border-radius:6px;padding:28px;background:var(--bg-alt);}
+  .testi-card p.quote{font-size:15px;line-height:1.65;color:#d8d8d8;margin-bottom:20px;}
+  .testi-who{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gray);}
+  .testi-who b{color:var(--white);font-weight:600;}
+  @media(max-width:860px){.testi-grid{grid-template-columns:1fr;}}
+
+  /* ---------- FAQ ---------- */
+  .faq-item{border-bottom:1px solid var(--line);}
+  .faq-q{
+    width:100%;text-align:left;background:none;border:none;color:var(--white);
+    padding:26px 0;display:flex;justify-content:space-between;align-items:center;
+    font-family:'Inter',sans-serif;font-size:18px;font-weight:600;cursor:pointer;
+  }
+  .faq-q .num{
+    font-family:'JetBrains Mono',monospace;color:var(--red);font-size:13px;margin-right:16px;
+  }
+  .faq-icon{font-size:20px;color:var(--gray);transition:transform 0.25s;flex-shrink:0;}
+  .faq-item.open .faq-icon{transform:rotate(45deg);color:var(--red);}
+  .faq-a{
+    max-height:0;overflow:hidden;transition:max-height 0.3s ease;
+  }
+  .faq-a p{color:var(--gray);font-size:15px;line-height:1.65;padding-bottom:24px;max-width:640px;}
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta{
+    text-align:center;padding:110px 32px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+  }
+  .final-cta h2{font-size:clamp(38px,6vw,72px);margin-bottom:24px;}
+  .final-cta p{color:var(--gray);margin-bottom:38px;font-size:16px;}
+  .final-cta .btn-row{justify-content:center;}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:44px 32px;}
+  .footer-inner{
+    max-width:1240px;margin:0 auto;display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;gap:16px;
+  }
+  .footer-inner p{color:var(--gray-dim);font-size:13px;font-family:'JetBrains Mono',monospace;}
+  .footer-links{display:flex;gap:24px;}
+  .footer-links a{color:var(--gray);font-size:13px;font-family:'JetBrains Mono',monospace;transition:color 0.2s;}
+  .footer-links a:hover{color:var(--red);}
+
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none !important;transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="logo">BUILTBY<span>WHO</span></a>
+    <ul class="nav-links">
+      <li><a href="#work">Work</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Start a project →</a>
+    <button class="burger" aria-label="menu">☰</button>
+  </nav>
+</header>
+
+<!-- HERO -->
+<section class="hero" style="padding-top:70px;">
+  <div>
+    <div class="eyebrow">Web Studio — 2 Devs, 0 Excuses</div>
+    <h1>SMALL TEAM.<br>BIG OBSESSION<br><span class="accent">WITH DETAIL.</span></h1>
+    <p>We build fast, clean, no-nonsense websites for small businesses and founders who need it done right — and done in a week, not a quarter.</p>
+    <div class="btn-row">
+      <a href="#contact" class="btn btn-primary">Book a call</a>
+      <a href="#contact" class="btn btn-outline">WhatsApp us</a>
+    </div>
+  </div>
+  <div class="terminal">
+    <div class="term-bar">
+      <div class="term-dot" style="background:#ff5f57;"></div>
+      <div class="term-dot" style="background:#febc2e;"></div>
+      <div class="term-dot" style="background:#28c840;"></div>
+      <span class="term-title">builtbywho — deploy.sh</span>
+    </div>
+    <div class="term-body" id="termBody"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    <span>7-DAY TURNAROUND</span><span>PIXEL-PERFECT BUILDS</span><span>NO BLOATED TIMELINES</span><span>2 DEVS, FULL FOCUS</span>
+    <span>7-DAY TURNAROUND</span><span>PIXEL-PERFECT BUILDS</span><span>NO BLOATED TIMELINES</span><span>2 DEVS, FULL FOCUS</span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">What We Build</div>
+      <h2>Pick your build.</h2>
+      <p>Whatever you need shipped, we're set up to move on it immediately — no bloated discovery phase, no 40-slide proposal deck.</p>
+    </div>
+  </div>
+  <div class="services-grid wrap" style="max-width:1240px;">
+    <div class="service-card reveal">
+      <div class="service-icon">▣</div>
+      <h3>Landing Pages</h3>
+      <p>One page, one job. Built to convert visitors into leads or customers, fast.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">◈</div>
+      <h3>Portfolio Sites</h3>
+      <p>For creators, freelancers, and professionals who need to look sharp online.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">▤</div>
+      <h3>E-commerce Stores</h3>
+      <p>Product listings, cart, checkout — a store that actually sells.</p>
+    </div>
+    <div class="service-card reveal">
+      <div class="service-icon">⌁</div>
+      <h3>Web Apps</h3>
+      <p>Custom tools and dashboards when a template won't cut it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORK -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Recent Builds</div>
+      <h2>Work in progress.</h2>
+      <p>We're a new studio — this section fills up fast. Here's where finished projects will live.</p>
+    </div>
+    <div class="work-grid">
+      <div class="work-card reveal">
+        <div class="work-thumb"></div>
+        <div class="work-info">
+          <span class="work-tag">Case Study — Coming Soon</span>
+          <h3>Project Slot 01</h3>
+          <p>Landing page · Replace with your first client build</p>
+        </div>
+      </div>
+      <div class="work-card reveal">
+        <div class="work-thumb"></div>
+        <div class="work-info">
+          <span class="work-tag">Case Study — Coming Soon</span>
+          <h3>Project Slot 02</h3>
+          <p>E-commerce · Replace with your second client build</p>
+        </div>
+      </div>
+      <div class="work-card reveal">
+        <div class="work-thumb"></div>
+        <div class="work-info">
+          <span class="work-tag">Case Study — Coming Soon</span>
+          <h3>Project Slot 03</h3>
+          <p>Portfolio site · Replace with your third client build</p>
+        </div>
+      </div>
+    </div>
+    <p class="work-note">Swap these three cards with real screenshots + links the moment your first projects ship.</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Who's Behind It</div>
+      <h2>Two devs. One deadline.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="founder-card reveal">
+        <div class="avatar">A</div>
+        <div>
+          <h3>Founder One</h3>
+          <span class="founder-role">Frontend & Design</span>
+          <p>Handles everything the client sees — interfaces, interactions, the stuff that makes a site feel expensive.</p>
+        </div>
+      </div>
+      <div class="founder-card reveal">
+        <div class="avatar">B</div>
+        <div>
+          <h3>Founder Two</h3>
+          <span class="founder-role">Backend & Infra</span>
+          <p>Handles everything that keeps it running — servers, databases, deployment, the stuff nobody sees until it breaks.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Pricing</div>
+      <h2>No fixed menu. Fair quotes.</h2>
+    </div>
+    <div class="pricing-band reveal">
+      <div>
+        <div class="price-tag">₹5,000<span>+</span></div>
+        <div class="price-sub">STARTING PRICE — SCOPE DEPENDENT</div>
+      </div>
+      <ul class="price-list">
+        <li>Custom design, not a theme</li>
+        <li>Mobile-ready, fast-loading</li>
+        <li>7-day delivery on standard scope</li>
+        <li>Direct access to both devs</li>
+      </ul>
+      <a href="#contact" class="btn btn-primary">Get a quote</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section id="testimonials">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Word on the street</div>
+      <h2>Placeholder praise.</h2>
+      <p>No clients yet — these are placeholders. Swap in real quotes as they come in.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <p class="quote">"Sample quote — replace with a real client testimonial once your first project wraps up."</p>
+        <div class="testi-who"><b>Client Name</b> — Role, Company</div>
+      </div>
+      <div class="testi-card reveal">
+        <p class="quote">"Sample quote — swap this for feedback on turnaround time or communication."</p>
+        <div class="testi-who"><b>Client Name</b> — Role, Company</div>
+      </div>
+      <div class="testi-card reveal">
+        <p class="quote">"Sample quote — swap this for feedback on the final design quality."</p>
+        <div class="testi-who"><b>Client Name</b> — Role, Company</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Frequently Asked</div>
+      <h2>Before you ask.</h2>
+    </div>
+    <div class="reveal">
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="num">01</span>How fast can you actually deliver?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Most single-page sites ship in 5–7 days from the day we lock scope and get your content. Bigger builds get a clear timeline upfront — no surprises.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="num">02</span>What's included in the starting price?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>A custom-designed, mobile-ready site built for your specific business — not a stock template. Final price depends on pages and features, and we always quote before starting.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="num">03</span>Do you offer revisions?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Yes. Every project includes a revision round before final delivery, so what you launch actually matches what you had in mind.</p></div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q"><span><span class="num">04</span>Can you handle e-commerce or backend work too?</span><span class="faq-icon">+</span></button>
+        <div class="faq-a"><p>Yes — between the two of us we cover frontend, backend, and deployment, so we're not limited to simple static pages.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section id="contact" class="final-cta">
+  <div class="eyebrow" style="justify-content:center;">Let's Build Something</div>
+  <h2>READY TO<br><span style="color:var(--red);">SHIP FAST?</span></h2>
+  <p>Tell us what you need. We'll tell you honestly if we can do it in a week.</p>
+  <div class="btn-row">
+    <a href="#" class="btn btn-primary">Book a call</a>
+    <a href="#" class="btn btn-outline">WhatsApp us</a>
+    <a href="#" class="btn btn-outline">Email us</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <p>© 2026 BUILTBYWHO — TWO DEVS, NO EXCUSES.</p>
+    <div class="footer-links">
+      <a href="#work">Work</a>
+      <a href="#services">Services</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item=>{
+    const q = item.querySelector('.faq-q');
+    const a = item.querySelector('.faq-a');
+    q.addEventListener('click', ()=>{
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(o=>{
+        o.classList.remove('open');
+        o.querySelector('.faq-a').style.maxHeight = null;
+      });
+      if(!isOpen){
+        item.classList.add('open');
+        a.style.maxHeight = a.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Scroll reveal
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:0.15});
+  revealEls.forEach(el=>io.observe(el));
+
+  // Terminal typing animation
+  const termBody = document.getElementById('termBody');
+  const lines = [
+    {t:'<span class="prompt">$</span> git clone client-brief.git', d:35},
+    {t:'<span class="comment">Cloning into \'project\'...</span>', d:20},
+    {t:'<span class="prompt">$</span> npm run design', d:35},
+    {t:'<span class="ok">✓</span> wireframes approved', d:15},
+    {t:'<span class="ok">✓</span> frontend built', d:15},
+    {t:'<span class="ok">✓</span> backend wired up', d:15},
+    {t:'<span class="prompt">$</span> npm run deploy <span class="tag">--fast</span>', d:35},
+    {t:'<span class="comment">Building for production...</span>', d:20},
+    {t:'<span class="ok">✓</span> optimized · 0 errors', d:15},
+    {t:'<span class="ok">STATUS: LIVE</span> — Day 7', d:0},
+  ];
+
+  async function typeLine(el, html, speed){
+    return new Promise(resolve=>{
+      const text = html.replace(/<[^>]+>/g,'');
+      let i = 0;
+      const tags = [];
+      // simple approach: type plain text then replace with html at end for tag lines
+      const plain = document.createElement('div');
+      termBody.appendChild(plain);
+      const interval = setInterval(()=>{
+        i++;
+        plain.textContent = text.slice(0,i);
+        if(i>=text.length){
+          clearInterval(interval);
+          plain.innerHTML = html;
+          resolve();
+        }
+      }, speed);
+    });
+  }
+
+  async function runTerminal(){
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced){
+      termBody.innerHTML = lines.map(l=>`<div>${l.t}</div>`).join('');
+      return;
+    }
+    for(const line of lines){
+      await typeLine(termBody, line.t, 28);
+      await new Promise(r=>setTimeout(r, line.d===0?0:200));
+    }
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    termBody.appendChild(cursor);
+  }
+  runTerminal();
+
+  // Mobile burger (simple toggle placeholder)
+  document.querySelector('.burger')?.addEventListener('click', ()=>{
+    const links = document.querySelector('.nav-links');
+    links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+    links.style.cssText += 'position:absolute;top:100%;left:0;right:0;background:#0a0a0b;flex-direction:column;padding:20px 32px;border-top:1px solid #28282d;';
+  });
+</script>
+
+</body>
+</html>
