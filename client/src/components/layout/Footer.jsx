@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
   const links = [
-    { href: '#work', label: 'Work' },
-    { href: '#services', label: 'Services' },
-    { href: '#pricing', label: 'Pricing' },
-    { href: '#faq', label: 'FAQ' },
+    { to: '/work', label: 'Work' },
+    { to: '/#services', label: 'Services' },
+    { to: '/#pricing', label: 'Pricing' },
+    { to: '/contact', label: 'Contact' },
   ];
 
   return (
@@ -13,10 +13,10 @@ export default function Footer() {
       <div className="footer-inner">
         <p>© 2026 BUILTBYWHO — TWO DEVS, NO EXCUSES.</p>
         <div className="footer-links">
-          {links.map(({ href, label }) => (
-            <a key={href} href={href}>
+          {links.map(({ to, label }) => (
+            <Link key={to} to={to}>
               {label}
-            </a>
+            </Link>
           ))}
         </div>
       </div>

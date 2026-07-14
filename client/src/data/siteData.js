@@ -21,21 +21,100 @@ export const services = [
   },
 ];
 
+export const projectCategories = [
+  { id: 'all', label: 'All' },
+  { id: 'landing', label: 'Landing Pages' },
+  { id: 'ecommerce', label: 'E-commerce' },
+  { id: 'portfolio', label: 'Portfolio' },
+  { id: 'webapp', label: 'Web Apps' },
+];
+
 export const projects = [
   {
+    slug: 'project-slot-01',
     tag: 'Case Study — Coming Soon',
+    category: 'landing',
     title: 'Project Slot 01',
     description: 'Landing page · Replace with your first client build',
+    featured: true,
+    published: true,
+    timeline: '6 days',
+    stack: ['React', 'Vite', 'Node.js'],
+    problem:
+      'Client needed a high-converting landing page to launch a new offer — fast, without a bloated agency timeline.',
+    solution:
+      'We scoped tight, designed mobile-first, and shipped a custom page with clear CTAs and a contact funnel built in.',
+    results: [
+      'Live in under a week from kickoff',
+      'Mobile-ready layout with fast load times',
+      'Clear conversion path from hero to contact',
+    ],
+    liveUrl: null,
   },
   {
+    slug: 'project-slot-02',
     tag: 'Case Study — Coming Soon',
+    category: 'ecommerce',
     title: 'Project Slot 02',
     description: 'E-commerce · Replace with your second client build',
+    featured: true,
+    published: true,
+    timeline: '7 days',
+    stack: ['React', 'Express', 'MongoDB'],
+    problem:
+      'A small brand wanted to sell online without wrestling a generic template or paying for features they did not need.',
+    solution:
+      'We built a focused storefront: product listings, cart flow, and checkout path tuned for their catalog size.',
+    results: [
+      'Store structure ready for real products',
+      'Clean admin-friendly product layout',
+      'End-to-end purchase flow wired up',
+    ],
+    liveUrl: null,
   },
   {
+    slug: 'project-slot-03',
     tag: 'Case Study — Coming Soon',
+    category: 'portfolio',
     title: 'Project Slot 03',
     description: 'Portfolio site · Replace with your third client build',
+    featured: true,
+    published: true,
+    timeline: '5 days',
+    stack: ['React', 'CSS', 'Vite'],
+    problem:
+      'A freelancer needed a portfolio that felt premium and loaded instantly — not another cookie-cutter theme.',
+    solution:
+      'Custom layout, sharp typography, and a work grid designed to showcase projects without clutter.',
+    results: [
+      'Distinct visual identity on a tight budget',
+      'Portfolio grid ready for real case studies',
+      'Fast, lightweight frontend build',
+    ],
+    liveUrl: null,
+  },
+];
+
+export const processSteps = [
+  {
+    num: '01',
+    title: 'Call & scope',
+    description: '30-minute call. We lock pages, features, and timeline — no 40-slide deck.',
+  },
+  {
+    num: '02',
+    title: 'Design & build',
+    description: 'Both devs go heads-down. You get updates, not radio silence.',
+  },
+  {
+    num: '03',
+    title: 'Review & revise',
+    description: 'One revision round included so the launch matches what you had in mind.',
+  },
+  {
+    num: '04',
+    title: 'Ship live',
+    description: 'Deployed, tested, and handed over — usually within 7 days on standard scope.',
   },
 ];
 
@@ -61,23 +140,8 @@ export const pricingFeatures = [
   'Direct access to both devs',
 ];
 
-export const testimonials = [
-  {
-    quote: '"Sample quote — replace with a real client testimonial once your first project wraps up."',
-    name: 'Client Name',
-    role: 'Role, Company',
-  },
-  {
-    quote: '"Sample quote — swap this for feedback on turnaround time or communication."',
-    name: 'Client Name',
-    role: 'Role, Company',
-  },
-  {
-    quote: '"Sample quote — swap this for feedback on the final design quality."',
-    name: 'Client Name',
-    role: 'Role, Company',
-  },
-];
+/** Only published testimonials render on the site. */
+export const testimonials = [];
 
 export const faqItems = [
   {
@@ -112,3 +176,15 @@ export const marqueeItems = [
   'NO BLOATED TIMELINES',
   '2 DEVS, FULL FOCUS',
 ];
+
+export function getProjectBySlug(slug) {
+  return projects.find((p) => p.slug === slug && p.published);
+}
+
+export function getFeaturedProjects(limit = 3) {
+  return projects.filter((p) => p.published && p.featured).slice(0, limit);
+}
+
+export function getPublishedTestimonials() {
+  return testimonials.filter((t) => t.published);
+}

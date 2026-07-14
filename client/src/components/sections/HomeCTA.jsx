@@ -1,6 +1,8 @@
-export default function FinalCTA() {
+import { Link } from 'react-router-dom';
+
+export default function HomeCTA() {
   return (
-    <section id="contact" className="final-cta">
+    <section className="final-cta">
       <div className="eyebrow" style={{ justifyContent: 'center' }}>
         Let&apos;s Build Something
       </div>
@@ -11,15 +13,12 @@ export default function FinalCTA() {
       </h2>
       <p>Tell us what you need. We&apos;ll tell you honestly if we can do it in a week.</p>
       <div className="btn-row">
-        <a href="#" className="btn btn-primary">
-          Book a call
-        </a>
-        <a href="#" className="btn btn-outline">
-          WhatsApp us
-        </a>
-        <a href="#" className="btn btn-outline">
-          Email us
-        </a>
+        <Link to="/contact" className="btn btn-primary">
+          Get a quote
+        </Link>
+        <Link to="/work" className="btn btn-outline">
+          See our work
+        </Link>
       </div>
     </section>
   );

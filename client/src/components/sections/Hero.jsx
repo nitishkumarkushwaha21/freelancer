@@ -1,4 +1,6 @@
+import { Link } from 'react-router-dom';
 import Terminal from '../ui/Terminal';
+import { getWhatsAppUrl } from '../../config/site';
 
 export default function Hero() {
   return (
@@ -17,10 +19,10 @@ export default function Hero() {
           done right — and done in a week, not a quarter.
         </p>
         <div className="btn-row">
-          <a href="#contact" className="btn btn-primary">
+          <Link to="/contact" className="btn btn-primary">
             Book a call
-          </a>
-          <a href="#contact" className="btn btn-outline">
+          </Link>
+          <a href={getWhatsAppUrl()} className="btn btn-outline" target="_blank" rel="noreferrer">
             WhatsApp us
           </a>
         </div>

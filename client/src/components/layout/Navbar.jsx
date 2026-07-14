@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import ThemeToggle from '../ui/ThemeToggle';
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: '#work', label: 'Work' },
-    { href: '#services', label: 'Services' },
-    { href: '#pricing', label: 'Pricing' },
-    { href: '#faq', label: 'FAQ' },
+    { to: '/work', label: 'Work' },
+    { to: '/#services', label: 'Services' },
+    { to: '/#pricing', label: 'Pricing' },
+    { to: '/#faq', label: 'FAQ' },
   ];
 
   const closeMenu = () => setMenuOpen(false);
@@ -20,17 +21,20 @@ export default function Navbar() {
           BUILTBY<span>WHO</span>
         </Link>
         <ul className={`nav-links${menuOpen ? ' open' : ''}`}>
-          {navLinks.map(({ href, label }) => (
-            <li key={href}>
-              <a href={href} onClick={closeMenu}>
+          {navLinks.map(({ to, label }) => (
+            <li key={to}>
+              <Link to={to} onClick={closeMenu}>
                 {label}
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
-        <a href="#contact" className="nav-cta" onClick={closeMenu}>
-          Start a project →
-        </a>
+        <div className="nav-actions">
+          <ThemeToggle />
+          <Link to="/contact" className="nav-cta" onClick={closeMenu}>
+            Start a project →
+          </Link>
+        </div>
         <button
           type="button"
           className="burger"

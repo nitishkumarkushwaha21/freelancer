@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from '../ui/Reveal';
 import { pricingFeatures } from '../../data/siteData';
 
@@ -21,9 +22,9 @@ export default function Pricing() {
               <li key={feature}>{feature}</li>
             ))}
           </ul>
-          <a href="#contact" className="btn btn-primary">
+          <Link to="/contact" className="btn btn-primary">
             Get a quote
-          </a>
+          </Link>
         </Reveal>
       </div>
     </section>

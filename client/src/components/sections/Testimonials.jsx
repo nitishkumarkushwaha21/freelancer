@@ -1,16 +1,17 @@
 import Reveal from '../ui/Reveal';
-import { testimonials } from '../../data/siteData';
+import { getPublishedTestimonials } from '../../data/siteData';
 
 export default function Testimonials() {
+  const testimonials = getPublishedTestimonials();
+
+  if (testimonials.length === 0) return null;
+
   return (
     <section id="testimonials">
       <div className="wrap">
         <Reveal className="section-head">
           <div className="eyebrow">Word on the street</div>
-          <h2>Placeholder praise.</h2>
-          <p>
-            No clients yet — these are placeholders. Swap in real quotes as they come in.
-          </p>
+          <h2>Client feedback.</h2>
         </Reveal>
         <div className="testi-grid">
           {testimonials.map((testimonial, i) => (
