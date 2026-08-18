@@ -752,6 +752,134 @@ section {
   }
 }
 
+.testi-cta {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.review-card .star-rating {
+  margin-bottom: 14px;
+}
+
+.review-meta {
+  margin-bottom: 16px;
+}
+
+.review-tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--neon);
+  border: 1px solid var(--line);
+  padding: 4px 8px;
+  border-radius: var(--radius);
+}
+
+/* ---------- STAR RATING ---------- */
+.star-rating-input {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.star-rating-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--white);
+}
+
+.star-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--line);
+  cursor: default;
+}
+
+.star-rating-sm .star-btn {
+  font-size: 18px;
+}
+
+.star-rating-input .star-btn {
+  cursor: pointer;
+  transition: color 0.15s, transform 0.15s;
+}
+
+.star-rating-input .star-btn:hover {
+  transform: scale(1.08);
+}
+
+.star-btn.filled {
+  color: var(--neon);
+}
+
+.star-rating-value {
+  margin-left: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--gray);
+}
+
+/* ---------- REVIEWS PAGE ---------- */
+.page-reviews .reviews-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 48px;
+  align-items: start;
+  padding: 80px 0 64px;
+}
+
+.reviews-intro h2 {
+  margin-bottom: 16px;
+}
+
+.reviews-intro p {
+  color: var(--gray);
+  line-height: 1.65;
+  margin-bottom: 24px;
+  max-width: 42ch;
+}
+
+.reviews-form-title {
+  font-size: 18px;
+  margin-bottom: 20px;
+  text-transform: none;
+}
+
+.reviews-list-section {
+  padding: 0 0 80px;
+}
+
+.reviews-status,
+.reviews-empty {
+  color: var(--gray);
+  padding: 24px 0;
+}
+
+.reviews-empty {
+  border: 1px dashed var(--line);
+  border-radius: 6px;
+  text-align: center;
+  padding: 48px 24px;
+}
+
+@media (max-width: 860px) {
+  .page-reviews .reviews-layout {
+    grid-template-columns: 1fr;
+    padding-top: 48px;
+  }
+}
+
 /* ---------- FAQ ---------- */
 .faq-item {
   border-bottom: 1px solid var(--line);
@@ -1299,4 +1427,260 @@ a.work-card {
 
 [data-theme='light'] .btn-outline:hover {
   background: rgba(15, 118, 110, 0.06);
+}
+
+/* ---------- TEAM PAGE ---------- */
+.about-team-cta {
+  margin-top: 36px;
+}
+
+.page-team .page-hero {
+  min-height: 32vh;
+  display: flex;
+  align-items: center;
+  border-bottom: none;
+}
+
+.team-stage-placeholder {
+  height: 100vh;
+  background: #f2ebe1;
+}
+
+.team-stage {
+  padding: 0;
+  position: relative;
+  height: 340vh;
+}
+
+.team-stage-static {
+  height: 100vh;
+}
+
+.page-team .team-stage-sticky {
+  background: radial-gradient(ellipse at 50% 28%, #faf6ef 0%, #ede4d6 52%, #e0d5c6 100%);
+}
+
+.team-stage-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.page-team .team-stage-sticky::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(247, 244, 238, 0.92) 0%, transparent 72px);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.page-team .team-stage-sticky::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 90px 28px rgba(100, 80, 60, 0.1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.page-team .team-scroll-hint {
+  color: #6a6258;
+}
+
+.team-canvas-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.team-canvas-wrap > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.team-stage-label {
+  position: absolute;
+  top: 5.5rem;
+  left: 2rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: #8c8c93;
+  text-transform: uppercase;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  z-index: 2;
+}
+
+.team-scroll-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 2.2rem;
+  transform: translateX(-50%);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  color: #8c8c93;
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.team-scroll-hint-bar {
+  width: 1px;
+  height: 26px;
+  background: linear-gradient(var(--red), transparent);
+  animation: team-pulse-down 1.6s ease-in-out infinite;
+}
+
+@keyframes team-pulse-down {
+  0% {
+    transform: scaleY(0.3);
+    opacity: 0.2;
+  }
+  50% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleY(0.3);
+    opacity: 0.2;
+  }
+}
+
+.team-fallback-section,
+.team-lead-out {
+  padding: 80px 0 100px;
+}
+
+.team-lead-out-cta {
+  margin-top: 40px;
+}
+
+.team-fallback-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 28px;
+}
+
+.avatar-img {
+  object-fit: cover;
+}
+
+.team-screen {
+  padding: 22px 26px 18px;
+  background: #05060a;
+  border-radius: 2px;
+  font-family: 'Inter', sans-serif;
+  color: #f5f5f2;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.team-screen-boot {
+  justify-content: flex-start;
+  padding-top: 36px;
+}
+
+.team-screen-boot-line {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 15px;
+  color: #22d3ee;
+  margin-bottom: 6px;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+}
+
+.team-screen-heading {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #e7e9ee;
+  margin: 2px 0 14px;
+}
+
+.team-screen-cursor {
+  display: inline-block;
+  width: 9px;
+  height: 16px;
+  background: #22d3ee;
+  margin-top: 4px;
+}
+
+.team-screen-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.team-screen-card {
+  background: #18181c;
+  border: 1px solid #2c2c34;
+  border-radius: 10px;
+  padding: 14px 8px 12px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+}
+
+.team-screen-avatar,
+.team-screen-avatar-img {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  margin: 0 auto 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #050608;
+  font-weight: 700;
+  font-size: 22px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.team-screen-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.25;
+}
+
+.team-screen-role {
+  font-size: 9px;
+  color: #7c8290;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 5px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+
+@media (max-width: 860px) {
+  .team-fallback-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .team-scroll-hint-bar {
+    animation: none;
+    opacity: 0.6;
+  }
 }

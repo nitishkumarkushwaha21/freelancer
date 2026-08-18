@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 export default function Footer() {
   const links = [
     { to: '/work', label: 'Work' },
+    { to: '/my-team', label: 'My Team' },
     { to: '/#services', label: 'Services' },
     { to: '/#pricing', label: 'Pricing' },
     { to: '/contact', label: 'Contact' },

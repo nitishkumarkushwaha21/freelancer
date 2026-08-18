@@ -31,25 +31,25 @@ export const projectCategories = [
 
 export const projects = [
   {
-    slug: 'project-slot-01',
-    tag: 'Case Study — Coming Soon',
+    slug: 'root-and-rise',
+    tag: 'Yoga Studio — Live Demo',
     category: 'landing',
-    title: 'Project Slot 01',
-    description: 'Landing page · Replace with your first client build',
+    title: 'Root & Rise',
+    description: 'Yoga & mobility studio · Indiranagar, Bengaluru',
     featured: true,
     published: true,
     timeline: '6 days',
-    stack: ['React', 'Vite', 'Node.js'],
+    stack: ['React', 'Express', 'MongoDB'],
     problem:
-      'Client needed a high-converting landing page to launch a new offer — fast, without a bloated agency timeline.',
+      'A neighbourhood yoga studio needed a site that felt calm and premium — not a generic wellness template — with real class booking, not just a contact form.',
     solution:
-      'We scoped tight, designed mobile-first, and shipped a custom page with clear CTAs and a contact funnel built in.',
+      'We built a standalone MERN app with the studio\'s forest-and-gold identity, animated breathing hero, live Tuesday schedule from MongoDB, and a trial class booking flow.',
     results: [
-      'Live in under a week from kickoff',
-      'Mobile-ready layout with fast load times',
-      'Clear conversion path from hero to contact',
+      'Faithful custom design — Fraunces + Sora, zero template feel',
+      'Dynamic class schedule with live spot counts',
+      'Trial booking form saves to database and decrements spots',
     ],
-    liveUrl: null,
+    liveUrl: import.meta.env.VITE_ROOT_RISE_URL || 'http://localhost:5174',
   },
   {
     slug: 'project-slot-02',
@@ -57,7 +57,7 @@ export const projects = [
     category: 'ecommerce',
     title: 'Project Slot 02',
     description: 'E-commerce · Replace with your second client build',
-    featured: true,
+    featured: false,
     published: true,
     timeline: '7 days',
     stack: ['React', 'Express', 'MongoDB'],
@@ -78,7 +78,7 @@ export const projects = [
     category: 'portfolio',
     title: 'Project Slot 03',
     description: 'Portfolio site · Replace with your third client build',
-    featured: true,
+    featured: false,
     published: true,
     timeline: '5 days',
     stack: ['React', 'CSS', 'Vite'],
@@ -130,6 +130,32 @@ export const founders = [
     name: 'Founder Two',
     role: 'Backend & Infra',
     bio: 'Handles everything that keeps it running — servers, databases, deployment, the stuff nobody sees until it breaks.',
+  },
+];
+
+/** Full roster for /my-team (2 founders + 2 placeholder seats). */
+export const team = [
+  {
+    ...founders[0],
+    color: '#22d3ee',
+  },
+  {
+    ...founders[1],
+    color: '#a78bfa',
+  },
+  {
+    initial: '3',
+    name: 'Developer 3',
+    role: 'Backend Developer',
+    bio: 'Placeholder seat — APIs, data, and the systems that keep client sites fast under load.',
+    color: '#34d399',
+  },
+  {
+    initial: '4',
+    name: 'Developer 4',
+    role: 'UI/UX Developer',
+    bio: 'Placeholder seat — product design, interaction, and the last 10% that makes a build feel finished.',
+    color: '#fb923c',
   },
 ];
 

@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Reveal from '../ui/Reveal';
 import { founders } from '../../data/siteData';
 
@@ -21,6 +22,11 @@ export default function About() {
             </Reveal>
           ))}
         </div>
+        <Reveal className="btn-row about-team-cta">
+          <Link to="/my-team" className="btn btn-outline">
+            Meet the team →
+          </Link>
+        </Reveal>
       </div>
     </section>
   );
