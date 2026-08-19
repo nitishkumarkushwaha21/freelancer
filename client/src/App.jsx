@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Layout from './components/layout/Layout';
+import PublicLayout from './components/layout/PublicLayout';
 import HomePage from './pages/HomePage';
 import WorkPage from './pages/WorkPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
@@ -41,7 +41,7 @@ export default function App() {
         </Route>
       </Route>
 
-      <Route element={<Layout />}>
+      <Route element={<PublicLayout />}>
         <Route index element={<HomePage />} />
         <Route path="work" element={<WorkPage />} />
         <Route path="work/:slug" element={<ProjectDetailPage />} />

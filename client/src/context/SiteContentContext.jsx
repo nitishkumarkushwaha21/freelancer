@@ -1,6 +1,25 @@
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { fetchAllContent } from '../api/content';
 
+const FETCH_TIMEOUT_MS = 12000;
+
+async function fetchAllContentWithTimeout() {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  try {
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    const res = await fetch(`${apiBase}/api/content/all`, { signal: controller.signal });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      throw new Error(data.message || 'Failed to load content.');
+    }
+    return data;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 const SiteContentContext = createContext(null);
 
 const defaultSettings = {
@@ -23,12 +42,18 @@ export function SiteContentProvider({ children }) {
   useEffect(() => {
     let cancelled = false;
 
-    fetchAllContent()
+    fetchAllContentWithTimeout()
       .then((data) => {
         if (!cancelled) setContent(data);
       })
       .catch((err) => {
-        if (!cancelled) setError(err.message || 'Failed to load site content.');
+        if (!cancelled) {
+          setError(
+            err.name === 'AbortError'
+              ? 'Content API timed out. Check VITE_API_URL in Vercel env vars.'
+              : err.message || 'Failed to load site content.'
+          );
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
