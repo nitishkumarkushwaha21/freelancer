@@ -4,7 +4,6 @@ import { ContactShadows, Html, PerspectiveCamera } from '@react-three/drei';
 import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { team } from '../../data/siteData';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -198,7 +197,7 @@ function Keyboard() {
   );
 }
 
-function Laptop({ progressRef, onScreenState, bootProgress, teamProgress, startOpen, idle }) {
+function Laptop({ progressRef, onScreenState, bootProgress, teamProgress, startOpen, idle, members }) {
   const rootRef = useRef();
   const lidRef = useRef();
   const screenMatRef = useRef();
@@ -333,7 +332,7 @@ function Laptop({ progressRef, onScreenState, bootProgress, teamProgress, startO
           zIndexRange={[20, 0]}
           style={{ pointerEvents: 'none' }}
         >
-          <TeamScreen bootProgress={bootProgress} teamProgress={teamProgress} />
+          <TeamScreen bootProgress={bootProgress} teamProgress={teamProgress} members={members} />
         </Html>
       </group>
     </group>
@@ -349,7 +348,7 @@ function bootLineSlices(bootProgress) {
   });
 }
 
-function TeamScreen({ bootProgress, teamProgress }) {
+function TeamScreen({ bootProgress, teamProgress, members }) {
   if (bootProgress <= 0.02 && teamProgress <= 0.02) return null;
 
   if (teamProgress <= 0.02) {
@@ -376,23 +375,23 @@ function TeamScreen({ bootProgress, teamProgress }) {
       <div className="team-screen-boot-line">$ builtbywho --team</div>
       <div className="team-screen-boot-line team-screen-heading">meet the team</div>
       <div className="team-screen-grid">
-        {team.map((dev, i) => {
+        {members.map((dev, i) => {
           const cardStart = i / 4;
           const cardEnd = cardStart + 0.55 / 4;
           const local = smoothstep(cardStart, cardEnd, teamProgress);
-          if (local <= 0.02) return <div key={dev.name} />;
+          if (local <= 0.02) return <div key={dev._id || dev.name} />;
 
           return (
             <div
-              key={dev.name}
+              key={dev._id || dev.name}
               className="team-screen-card"
               style={{
                 opacity: local,
                 transform: `translateY(${(1 - local) * 18}px)`,
               }}
             >
-              {dev.image ? (
-                <img src={dev.image} alt={dev.name} className="team-screen-avatar-img" />
+              {dev.imageUrl ? (
+                <img src={dev.imageUrl} alt={dev.name} className="team-screen-avatar-img" />
               ) : (
                 <div className="team-screen-avatar" style={{ background: dev.color }}>
                   {dev.initial || dev.name.charAt(0)}
@@ -420,7 +419,7 @@ function Lights() {
   );
 }
 
-export default function LaptopTeamExperience({ lockedProgress = null }) {
+export default function LaptopTeamExperience({ lockedProgress = null, members = [] }) {
   const wrapperRef = useRef(null);
   const progressRef = useRef(lockedProgress ?? 0);
   const [screenState, setScreenState] = useState({
@@ -470,6 +469,7 @@ export default function LaptopTeamExperience({ lockedProgress = null }) {
               teamProgress={screenState.team}
               startOpen={lockedProgress != null}
               idle={lockedProgress == null}
+              members={members}
             />
             <ContactShadows
               position={[0, LAPTOP_Y, 0]}

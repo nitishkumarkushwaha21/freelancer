@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import Reveal from '../ui/Reveal';
-import { getMailtoUrl, getWhatsAppUrl } from '../../config/site';
-
-const PROJECT_TYPES = ['Landing Page', 'Portfolio Site', 'E-commerce', 'Web App', 'Other'];
-const BUDGET_RANGES = ['Under ₹10,000', '₹10,000 – ₹25,000', '₹25,000 – ₹50,000', '₹50,000+'];
+import { useSiteContent } from '../../context/SiteContentContext';
+import { useSiteLinks } from '../../hooks/useSiteLinks';
 
 const initialForm = {
   name: '',
@@ -15,6 +13,15 @@ const initialForm = {
 };
 
 export default function ContactForm() {
+  const { settings } = useSiteContent();
+  const { getWhatsAppUrl } = useSiteLinks();
+  const projectTypes = settings.contactProjectTypes?.length
+    ? settings.contactProjectTypes
+    : ['Landing Page', 'Portfolio Site', 'E-commerce', 'Web App', 'Other'];
+  const budgetRanges = settings.contactBudgetRanges?.length
+    ? settings.contactBudgetRanges
+    : ['Under ₹10,000', '₹10,000 – ₹25,000', '₹25,000 – ₹50,000', '₹50,000+'];
+
   const [form, setForm] = useState(initialForm);
   const [status, setStatus] = useState('idle');
   const [errorMsg, setErrorMsg] = useState('');
@@ -88,7 +95,7 @@ export default function ContactForm() {
           Project type *
           <select required value={form.projectType} onChange={update('projectType')}>
             <option value="">Select type</option>
-            {PROJECT_TYPES.map((type) => (
+            {projectTypes.map((type) => (
               <option key={type} value={type}>
                 {type}
               </option>
@@ -100,7 +107,7 @@ export default function ContactForm() {
         Budget range *
         <select required value={form.budget} onChange={update('budget')}>
           <option value="">Select range</option>
-          {BUDGET_RANGES.map((range) => (
+          {budgetRanges.map((range) => (
             <option key={range} value={range}>
               {range}
             </option>
@@ -128,6 +135,8 @@ export default function ContactForm() {
 }
 
 export function ContactPageContent() {
+  const { getWhatsAppUrl, getMailtoUrl } = useSiteLinks();
+
   return (
     <div className="page-contact">
       <section className="page-hero">

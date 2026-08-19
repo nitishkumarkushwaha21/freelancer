@@ -74,3 +74,110 @@ export async function deleteReview(id) {
 export function logout() {
   clearToken();
 }
+
+// CMS — Projects
+export async function fetchAdminProjects() {
+  return adminFetch('/api/admin/projects');
+}
+
+export async function createProject(data) {
+  return adminFetch('/api/admin/projects', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function updateProject(id, data) {
+  return adminFetch(`/api/admin/projects/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+}
+
+export async function deleteProject(id) {
+  return adminFetch(`/api/admin/projects/${id}`, { method: 'DELETE' });
+}
+
+// CMS — Team
+export async function fetchAdminTeam() {
+  return adminFetch('/api/admin/team');
+}
+
+export async function createTeamMember(data) {
+  return adminFetch('/api/admin/team', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function updateTeamMember(id, data) {
+  return adminFetch(`/api/admin/team/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+}
+
+export async function deleteTeamMember(id) {
+  return adminFetch(`/api/admin/team/${id}`, { method: 'DELETE' });
+}
+
+// CMS — Services
+export async function fetchAdminServices() {
+  return adminFetch('/api/admin/services');
+}
+
+export async function createService(data) {
+  return adminFetch('/api/admin/services', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function updateService(id, data) {
+  return adminFetch(`/api/admin/services/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+}
+
+export async function deleteService(id) {
+  return adminFetch(`/api/admin/services/${id}`, { method: 'DELETE' });
+}
+
+// CMS — Process
+export async function fetchAdminProcess() {
+  return adminFetch('/api/admin/process');
+}
+
+export async function createProcessStep(data) {
+  return adminFetch('/api/admin/process', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function updateProcessStep(id, data) {
+  return adminFetch(`/api/admin/process/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+}
+
+export async function deleteProcessStep(id) {
+  return adminFetch(`/api/admin/process/${id}`, { method: 'DELETE' });
+}
+
+// CMS — FAQ
+export async function fetchAdminFaq() {
+  return adminFetch('/api/admin/faq');
+}
+
+export async function createFaqItem(data) {
+  return adminFetch('/api/admin/faq', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function updateFaqItem(id, data) {
+  return adminFetch(`/api/admin/faq/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+}
+
+export async function deleteFaqItem(id) {
+  return adminFetch(`/api/admin/faq/${id}`, { method: 'DELETE' });
+}
+
+// CMS — Settings
+export async function fetchAdminSettings() {
+  return adminFetch('/api/admin/settings');
+}
+
+export async function updateAdminSettings(data) {
+  return adminFetch('/api/admin/settings', { method: 'PUT', body: JSON.stringify(data) });
+}
+
+// Users
+export async function fetchUsers() {
+  return adminFetch('/api/admin/users');
+}
+
+export async function createUser(data) {
+  return adminFetch('/api/admin/users', { method: 'POST', body: JSON.stringify(data) });
+}
+
+export async function updateUser(id, data) {
+  return adminFetch(`/api/admin/users/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+}

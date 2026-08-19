@@ -1,3 +1,4 @@
+import { useSiteContent } from '../context/SiteContentContext';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Reveal from '../components/ui/Reveal';
@@ -56,7 +57,7 @@ function LeadIn() {
   );
 }
 
-function LeadOut({ showGrid }) {
+function LeadOut({ showGrid, team }) {
   return (
     <section className="team-lead-out">
       <div className="wrap">
@@ -65,7 +66,7 @@ function LeadOut({ showGrid }) {
           <h2>Meet the team.</h2>
           <p>Two founders shipping now — plus two seats we fill as the work grows.</p>
         </Reveal>
-        {showGrid ? <TeamFallbackGrid /> : null}
+        {showGrid ? <TeamFallbackGrid team={team} /> : null}
         <div className="btn-row team-lead-out-cta">
           <Link to="/contact" className="btn btn-primary">
             Start a project →
@@ -80,6 +81,7 @@ function LeadOut({ showGrid }) {
 }
 
 export default function TeamPage() {
+  const { team } = useSiteContent();
   const [mode, setMode] = useTeamExperienceMode();
 
   useEffect(() => {
@@ -96,11 +98,11 @@ export default function TeamPage() {
 
       {show3d ? (
         <WebGLErrorBoundary
-          fallback={<section className="team-fallback-section"><div className="wrap"><TeamFallbackGrid /></div></section>}
+          fallback={<section className="team-fallback-section"><div className="wrap"><TeamFallbackGrid team={team} /></div></section>}
           onError={() => setMode('fallback')}
         >
           <Suspense fallback={<div className="team-stage-placeholder" aria-hidden="true" />}>
-            <LaptopTeamExperience lockedProgress={mode === '3d-static' ? 1 : null} />
+            <LaptopTeamExperience lockedProgress={mode === '3d-static' ? 1 : null} members={team} />
           </Suspense>
         </WebGLErrorBoundary>
       ) : null}
@@ -108,12 +110,12 @@ export default function TeamPage() {
       {mode === 'fallback' ? (
         <section className="team-fallback-section">
           <div className="wrap">
-            <TeamFallbackGrid />
+            <TeamFallbackGrid team={team} />
           </div>
         </section>
       ) : null}
 
-      {mode ? <LeadOut showGrid={mode !== 'fallback'} /> : null}
+      {mode ? <LeadOut showGrid={mode !== 'fallback'} team={team} /> : null}
     </div>
   );
 }

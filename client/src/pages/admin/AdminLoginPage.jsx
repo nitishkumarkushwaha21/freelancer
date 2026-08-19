@@ -13,8 +13,16 @@ export default function AdminLoginPage() {
     document.title = 'Admin Login — BuiltByWho';
   }, []);
 
-  if (!loading && isAuthenticated) {
-    return <Navigate to="/admin/leads" replace />;
+  if (loading) {
+    return (
+      <div className="admin-page admin-login-page">
+        <p className="admin-muted">Checking session…</p>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <Navigate to="/admin/projects" replace />;
   }
 
   const handleSubmit = async (e) => {
@@ -36,7 +44,7 @@ export default function AdminLoginPage() {
       <div className="admin-login-card">
         <p className="admin-eyebrow">BuiltByWho</p>
         <h1>Admin login</h1>
-        <p className="admin-muted">Sign in to view contact form submissions.</p>
+        <p className="admin-muted">Sign in to manage site content, inquiries, and reviews.</p>
 
         <form className="admin-form" onSubmit={handleSubmit}>
           <label>

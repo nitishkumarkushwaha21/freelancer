@@ -1,7 +1,9 @@
 import Reveal from '../ui/Reveal';
-import { services } from '../../data/siteData';
+import { useSiteContent } from '../../context/SiteContentContext';
 
 export default function Services() {
+  const { services, loading } = useSiteContent();
+
   return (
     <section id="services">
       <div className="wrap">
@@ -15,13 +17,17 @@ export default function Services() {
         </Reveal>
       </div>
       <div className="services-grid wrap" style={{ maxWidth: '1240px' }}>
-        {services.map((service) => (
-          <Reveal key={service.title} className="service-card">
-            <div className="service-icon">{service.icon}</div>
-            <h3>{service.title}</h3>
-            <p>{service.description}</p>
-          </Reveal>
-        ))}
+        {loading ? (
+          <p className="admin-muted">Loading services…</p>
+        ) : (
+          services.map((service) => (
+            <Reveal key={service._id || service.title} className="service-card">
+              <div className="service-icon">{service.icon}</div>
+              <h3>{service.title}</h3>
+              <p>{service.description}</p>
+            </Reveal>
+          ))
+        )}
       </div>
     </section>
   );

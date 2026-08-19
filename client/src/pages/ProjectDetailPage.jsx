@@ -1,13 +1,52 @@
+import { useEffect, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import Reveal from '../components/ui/Reveal';
-import { getProjectBySlug } from '../data/siteData';
-import { getWhatsAppUrl } from '../config/site';
+import { fetchProjectBySlug } from '../api/content';
+import { useSiteLinks } from '../hooks/useSiteLinks';
 
 export default function ProjectDetailPage() {
   const { slug } = useParams();
-  const project = getProjectBySlug(slug);
+  const { getWhatsAppUrl } = useSiteLinks();
+  const [project, setProject] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-  if (!project) {
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    setNotFound(false);
+
+    fetchProjectBySlug(slug)
+      .then((data) => {
+        if (!cancelled) setProject(data.project);
+      })
+      .catch((err) => {
+        if (!cancelled && err.message?.includes('not found')) {
+          setNotFound(true);
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="page-project">
+        <section className="page-hero">
+          <div className="wrap">
+            <p className="admin-muted">Loading project…</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  if (notFound || !project) {
     return <Navigate to="/work" replace />;
   }
 
@@ -36,7 +75,10 @@ export default function ProjectDetailPage() {
 
       <section>
         <div className="wrap">
-          <div className="project-thumb-large" />
+          <div
+            className="project-thumb-large"
+            style={project.imageUrl ? { backgroundImage: `url(${project.imageUrl})`, backgroundSize: 'cover' } : undefined}
+          />
           <div className="case-study-grid">
             <Reveal className="case-block">
               <h3>The problem</h3>
@@ -49,7 +91,7 @@ export default function ProjectDetailPage() {
             <Reveal className="case-block case-block-full">
               <h3>Results</h3>
               <ul className="price-list">
-                {project.results.map((item) => (
+                {project.results?.map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>

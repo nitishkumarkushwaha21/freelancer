@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import Reveal from '../ui/Reveal';
-import { pricingFeatures } from '../../data/siteData';
+import { useSiteContent } from '../../context/SiteContentContext';
 
 export default function Pricing() {
+  const { settings, loading } = useSiteContent();
+  const features = settings.pricingFeatures || [];
+
   return (
     <section id="pricing">
       <div className="wrap">
@@ -13,12 +16,13 @@ export default function Pricing() {
         <Reveal className="pricing-band">
           <div>
             <div className="price-tag">
-              ₹5,000<span>+</span>
+              {loading ? '…' : settings.pricingAmount || '₹5,000'}
+              <span>+</span>
             </div>
             <div className="price-sub">STARTING PRICE — SCOPE DEPENDENT</div>
           </div>
           <ul className="price-list">
-            {pricingFeatures.map((feature) => (
+            {features.map((feature) => (
               <li key={feature}>{feature}</li>
             ))}
           </ul>

@@ -1,7 +1,9 @@
-import { marqueeItems } from '../../data/siteData';
+import { useSiteContent } from '../../context/SiteContentContext';
 
 export default function MarqueeStrip() {
-  const items = [...marqueeItems, ...marqueeItems];
+  const { settings, loading } = useSiteContent();
+  const marqueeItems = settings.marqueeItems?.length ? settings.marqueeItems : ['LOADING…'];
+  const items = loading ? ['LOADING…', 'LOADING…'] : [...marqueeItems, ...marqueeItems];
 
   return (
     <div className="marquee-strip">

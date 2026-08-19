@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const data = await apiLogin(email, password);
     setTokenState(data.token);
-    setUser({ email, role: 'admin' });
+    setUser(data.user || { email, role: 'admin' });
     return data;
   }, []);
 

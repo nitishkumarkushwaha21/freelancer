@@ -1,6 +1,18 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
+const navItems = [
+  { to: '/admin/projects', label: 'Projects' },
+  { to: '/admin/team', label: 'Team' },
+  { to: '/admin/services', label: 'Services' },
+  { to: '/admin/process', label: 'Process' },
+  { to: '/admin/faq', label: 'FAQ' },
+  { to: '/admin/settings', label: 'Settings' },
+  { to: '/admin/leads', label: 'Inquiries' },
+  { to: '/admin/reviews', label: 'Reviews' },
+  { to: '/admin/users', label: 'Users' },
+];
+
 export default function AdminLayout() {
   const { user, logout } = useAuth();
 
@@ -9,16 +21,19 @@ export default function AdminLayout() {
       <header className="admin-header">
         <div className="admin-header-inner">
           <div>
-            <Link to="/admin/leads" className="admin-brand">
+            <Link to="/admin/projects" className="admin-brand">
               BuiltByWho <span>Admin</span>
             </Link>
             <nav className="admin-nav">
-              <NavLink to="/admin/leads" className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}>
-                Inquiries
-              </NavLink>
-              <NavLink to="/admin/reviews" className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}>
-                Reviews
-              </NavLink>
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}
+                >
+                  {item.label}
+                </NavLink>
+              ))}
             </nav>
           </div>
           <div className="admin-header-actions">

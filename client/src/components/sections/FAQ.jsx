@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import Reveal from '../ui/Reveal';
-import { faqItems } from '../../data/siteData';
+import { useSiteContent } from '../../context/SiteContentContext';
 
 function FaqItem({ item, isOpen, onToggle }) {
   const answerRef = useRef(null);
@@ -25,6 +25,7 @@ function FaqItem({ item, isOpen, onToggle }) {
 }
 
 export default function FAQ() {
+  const { faq, loading } = useSiteContent();
   const [openIndex, setOpenIndex] = useState(null);
 
   const toggle = (index) => {
@@ -39,14 +40,18 @@ export default function FAQ() {
           <h2>Before you ask.</h2>
         </Reveal>
         <Reveal>
-          {faqItems.map((item, index) => (
-            <FaqItem
-              key={item.num}
-              item={item}
-              isOpen={openIndex === index}
-              onToggle={() => toggle(index)}
-            />
-          ))}
+          {loading ? (
+            <p className="admin-muted">Loading FAQ…</p>
+          ) : (
+            faq.map((item, index) => (
+              <FaqItem
+                key={item._id || item.num}
+                item={item}
+                isOpen={openIndex === index}
+                onToggle={() => toggle(index)}
+              />
+            ))
+          )}
         </Reveal>
       </div>
     </section>

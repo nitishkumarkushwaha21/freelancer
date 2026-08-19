@@ -1,15 +1,17 @@
 import { useState } from 'react';
 import Reveal from '../components/ui/Reveal';
 import WorkCard from '../components/ui/WorkCard';
-import { projectCategories, projects } from '../data/siteData';
+import { useSiteContent } from '../context/SiteContentContext';
 
 export default function WorkPage() {
+  const { projects, settings, loading } = useSiteContent();
   const [activeCategory, setActiveCategory] = useState('all');
+  const projectCategories = settings.projectCategories || [{ id: 'all', label: 'All' }];
 
   const filtered =
     activeCategory === 'all'
-      ? projects.filter((p) => p.published)
-      : projects.filter((p) => p.published && p.category === activeCategory);
+      ? projects
+      : projects.filter((p) => p.category === activeCategory);
 
   return (
     <div className="page-work">
@@ -41,7 +43,9 @@ export default function WorkPage() {
             ))}
           </div>
 
-          {filtered.length > 0 ? (
+          {loading ? (
+            <p className="admin-muted">Loading projects…</p>
+          ) : filtered.length > 0 ? (
             <div className="work-grid">
               {filtered.map((project) => (
                 <Reveal key={project.slug}>

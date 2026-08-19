@@ -1,13 +1,12 @@
 import Reveal from '../ui/Reveal';
-import { team } from '../../data/siteData';
 
-export default function TeamFallbackGrid() {
+export default function TeamFallbackGrid({ team = [] }) {
   return (
     <div className="team-fallback-grid">
       {team.map((member) => (
-        <Reveal key={member.name} className="founder-card">
-          {member.image ? (
-            <img src={member.image} alt={member.name} className="avatar avatar-img" />
+        <Reveal key={member._id || member.name} className="founder-card">
+          {member.imageUrl ? (
+            <img src={member.imageUrl} alt={member.name} className="avatar avatar-img" />
           ) : (
             <div className="avatar" style={{ background: member.color }}>
               {member.initial}
