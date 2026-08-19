@@ -5,26 +5,17 @@ import { requireAuth, requireAdmin } from '../../middleware/auth.js';
 
 const router = express.Router();
 
-const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
-
-if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
-  console.warn(
-    '[upload] Cloudinary env vars are missing. ' +
-    'Set CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET ' +
-    'in your Render environment (or server/.env for local dev).'
-  );
+function configureCloudinary() {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
 }
 
-cloudinary.config({
-  cloud_name: CLOUDINARY_CLOUD_NAME,
-  api_key: CLOUDINARY_API_KEY,
-  api_secret: CLOUDINARY_API_SECRET,
-});
-
-// Store file in memory so we can stream it to Cloudinary
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
+  limits: { fileSize: 10 * 1024 * 1024 },
   fileFilter(_req, file, cb) {
     if (!file.mimetype.startsWith('image/')) {
       return cb(new Error('Only image files are allowed.'));
@@ -33,15 +24,29 @@ const upload = multer({
   },
 });
 
+// Diagnostic endpoint — returns whether Cloudinary env vars are present
+// (never reveals actual values)
+router.get('/check', requireAuth, requireAdmin, (_req, res) => {
+  res.json({
+    CLOUDINARY_CLOUD_NAME: !!process.env.CLOUDINARY_CLOUD_NAME,
+    CLOUDINARY_API_KEY: !!process.env.CLOUDINARY_API_KEY,
+    CLOUDINARY_API_SECRET: !!process.env.CLOUDINARY_API_SECRET,
+    cloud_name_preview: process.env.CLOUDINARY_CLOUD_NAME || '(not set)',
+  });
+});
+
 router.post(
   '/',
   requireAuth,
   requireAdmin,
   upload.single('image'),
   async (req, res) => {
+    const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } = process.env;
+
     if (!CLOUDINARY_CLOUD_NAME || !CLOUDINARY_API_KEY || !CLOUDINARY_API_SECRET) {
       return res.status(500).json({
-        message: 'Image uploads are not configured. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your Render environment variables.',
+        message:
+          'Cloudinary is not configured. Add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to your Render environment variables, then redeploy.',
       });
     }
 
@@ -49,22 +54,26 @@ router.post(
       return res.status(400).json({ message: 'No image file provided.' });
     }
 
+    // Configure on every request so env var changes take effect without restart
+    configureCloudinary();
+
     try {
-      const result = await new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-          { folder: 'builtbywho', resource_type: 'image' },
-          (error, result) => {
-            if (error) return reject(error);
-            resolve(result);
-          }
-        );
-        stream.end(req.file.buffer);
+      // Convert buffer to base64 data URI — works reliably across all cloudinary SDK versions
+      const b64 = req.file.buffer.toString('base64');
+      const dataUri = `data:${req.file.mimetype};base64,${b64}`;
+
+      const result = await cloudinary.uploader.upload(dataUri, {
+        folder: 'builtbywho',
+        resource_type: 'image',
       });
 
       res.json({ url: result.secure_url, public_id: result.public_id });
     } catch (err) {
       console.error('Cloudinary upload error:', err);
-      res.status(500).json({ message: 'Image upload failed.' });
+      res.status(500).json({
+        message: `Image upload failed: ${err.message || 'Unknown error'}`,
+        http_code: err.http_code,
+      });
     }
   }
 );
