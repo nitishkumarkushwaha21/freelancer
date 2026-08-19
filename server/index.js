@@ -8,6 +8,7 @@ import reviewsRouter from './routes/reviews.js';
 import contentRouter from './routes/content.js';
 import adminContentRouter from './routes/admin/content.js';
 import adminUsersRouter from './routes/admin/users.js';
+import adminUploadRouter from './routes/admin/upload.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -51,6 +52,7 @@ app.use('/api/reviews', reviewsRouter);
 app.use('/api/content', contentRouter);
 app.use('/api/admin', adminContentRouter);
 app.use('/api/admin/users', adminUsersRouter);
+app.use('/api/admin/upload', adminUploadRouter);
 
 function sanitizeMongoUri(raw) {
   return raw.trim().replace(/^['"]|['"]$/g, '');
