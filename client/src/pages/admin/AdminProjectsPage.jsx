@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import AdminModal from '../../components/admin/AdminModal';
+import ImageUpload from '../../components/admin/ImageUpload';
 import {
   createProject,
   deleteProject,
@@ -101,8 +102,11 @@ function ProjectForm({ initial, onSave, onCancel, saving }) {
         <input value={form.liveUrl} onChange={set('liveUrl')} placeholder="https://..." />
       </label>
       <label>
-        Image URL
-        <input value={form.imageUrl} onChange={set('imageUrl')} placeholder="https://..." />
+        Image
+        <ImageUpload
+          value={form.imageUrl}
+          onChange={(url) => setForm((p) => ({ ...p, imageUrl: url }))}
+        />
       </label>
       <label className="admin-form-full">
         Stack (comma-separated)

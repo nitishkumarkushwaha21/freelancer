@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import AdminModal from '../../components/admin/AdminModal';
+import ImageUpload from '../../components/admin/ImageUpload';
 import {
   createTeamMember,
   deleteTeamMember,
@@ -52,8 +53,11 @@ function MemberForm({ initial, onSave, onCancel, saving }) {
         <input value={form.color} onChange={set('color')} placeholder="#22d3ee" />
       </label>
       <label>
-        Image URL
-        <input value={form.imageUrl} onChange={set('imageUrl')} placeholder="https://..." />
+        Image
+        <ImageUpload
+          value={form.imageUrl}
+          onChange={(url) => setForm((p) => ({ ...p, imageUrl: url }))}
+        />
       </label>
       <label>
         Sort order

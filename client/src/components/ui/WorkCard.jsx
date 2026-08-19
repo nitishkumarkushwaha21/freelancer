@@ -3,7 +3,14 @@ import { Link } from 'react-router-dom';
 export default function WorkCard({ project }) {
   return (
     <Link to={`/work/${project.slug}`} className="work-card">
-      <div className="work-thumb" />
+      <div
+        className="work-thumb"
+        style={
+          project.imageUrl
+            ? { backgroundImage: `url(${project.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }
+            : undefined
+        }
+      />
       <div className="work-info">
         <span className="work-tag">{project.tag}</span>
         <h3>{project.title}</h3>

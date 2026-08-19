@@ -75,6 +75,27 @@ export function logout() {
   clearToken();
 }
 
+// Image upload — sends file to server which streams it to Cloudinary
+export async function uploadImage(file) {
+  const token = getToken();
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const res = await fetch(`${getApiBase()}/api/admin/upload`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  });
+
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const err = new Error(data.message || 'Upload failed.');
+    err.status = res.status;
+    throw err;
+  }
+  return data; // { url, public_id }
+}
+
 // CMS — Projects
 export async function fetchAdminProjects() {
   return adminFetch('/api/admin/projects');
