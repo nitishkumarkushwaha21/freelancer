@@ -41,11 +41,15 @@ app.use('/api/content', contentRouter);
 app.use('/api/admin', adminContentRouter);
 app.use('/api/admin/users', adminUsersRouter);
 
+function sanitizeMongoUri(raw) {
+  return raw.trim().replace(/^['"]|['"]$/g, '');
+}
+
 async function start() {
-  const mongoUri = process.env.MONGO_URI;
+  const mongoUri = process.env.MONGO_URI ? sanitizeMongoUri(process.env.MONGO_URI) : '';
 
   if (!mongoUri) {
-    console.error('MONGO_URI is not set. Copy server/.env.example to server/.env and add your MongoDB URI.');
+    console.error('MONGO_URI is not set. Add it in Render Environment, or copy server/.env.example to server/.env.');
     process.exit(1);
   }
 
@@ -54,6 +58,11 @@ async function start() {
     console.log('Connected to MongoDB');
   } catch (err) {
     console.error('MongoDB connection failed:', err.message);
+    if (/bad auth|authentication failed/i.test(err.message)) {
+      console.error(
+        'Check MONGO_URI on Render: use the Atlas database user (not your Atlas login), URL-encode special characters in the password, and do not wrap the value in quotes.'
+      );
+    }
     process.exit(1);
   }
 
