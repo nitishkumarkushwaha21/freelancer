@@ -13,6 +13,9 @@ import adminUploadRouter from './routes/admin/upload.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Required on Render/Heroku so rate-limit and req.ip work behind the proxy
+app.set('trust proxy', 1);
+
 const allowedOrigins = [
   'http://localhost:5173',
   'https://freelancer-xi-nine.vercel.app',
@@ -42,17 +45,33 @@ app.use(
 
 app.use(express.json());
 
+app.get('/', (_req, res) => {
+  res.json({
+    ok: true,
+    message: 'BuiltByWho API — use /api/health to check status.',
+  });
+});
+
 app.get('/api/health', (_req, res) => {
-  res.json({ ok: true, db: mongoose.connection.readyState === 1 });
+  res.json({
+    ok: true,
+    db: mongoose.connection.readyState === 1,
+    cloudinary: {
+      cloud_name: !!process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: !!process.env.CLOUDINARY_API_KEY,
+      api_secret: !!process.env.CLOUDINARY_API_SECRET,
+    },
+  });
 });
 
 app.use('/api/auth', authRouter);
 app.use('/api/leads', leadsRouter);
 app.use('/api/reviews', reviewsRouter);
 app.use('/api/content', contentRouter);
-app.use('/api/admin', adminContentRouter);
-app.use('/api/admin/users', adminUsersRouter);
+// Mount upload before /api/admin — otherwise admin auth middleware blocks /api/admin/upload/*
 app.use('/api/admin/upload', adminUploadRouter);
+app.use('/api/admin/users', adminUsersRouter);
+app.use('/api/admin', adminContentRouter);
 
 function sanitizeMongoUri(raw) {
   return raw.trim().replace(/^['"]|['"]$/g, '');
