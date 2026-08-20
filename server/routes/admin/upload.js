@@ -25,8 +25,8 @@ const upload = multer({
 });
 
 // Diagnostic endpoint — returns whether Cloudinary env vars are present
-// (never reveals actual values)
-router.get('/check', requireAuth, requireAdmin, (_req, res) => {
+// (never reveals actual values, no auth required)
+router.get('/check', (_req, res) => {
   res.json({
     CLOUDINARY_CLOUD_NAME: !!process.env.CLOUDINARY_CLOUD_NAME,
     CLOUDINARY_API_KEY: !!process.env.CLOUDINARY_API_KEY,
