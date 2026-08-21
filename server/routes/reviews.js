@@ -7,6 +7,28 @@ const router = express.Router();
 
 const PROJECT_TYPES = ['Landing Page', 'Portfolio Site', 'E-commerce', 'Web App', 'Other'];
 
+function validateReviewFields(body) {
+  const name = body.name?.trim();
+  const role = body.role?.trim();
+  const projectType = body.projectType?.trim();
+  const experience = body.experience?.trim();
+  const stars = Number(body.rating);
+
+  if (!name || !role || !projectType || !experience) {
+    return { error: 'Please fill in all required fields.' };
+  }
+
+  if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
+    return { error: 'Please select a rating from 1 to 5 stars.' };
+  }
+
+  if (!PROJECT_TYPES.includes(projectType)) {
+    return { error: 'Please select a valid project type.' };
+  }
+
+  return { name, role, rating: stars, projectType, experience };
+}
+
 const reviewLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 5,
@@ -17,31 +39,17 @@ const reviewLimiter = rateLimit({
 
 router.post('/', reviewLimiter, async (req, res) => {
   try {
-    const { name, role, rating, projectType, experience } = req.body;
-
-    if (!name?.trim() || !role?.trim() || !projectType?.trim() || !experience?.trim()) {
-      return res.status(400).json({ message: 'Please fill in all required fields.' });
-    }
-
-    const stars = Number(rating);
-    if (!Number.isInteger(stars) || stars < 1 || stars > 5) {
-      return res.status(400).json({ message: 'Please select a rating from 1 to 5 stars.' });
-    }
-
-    if (!PROJECT_TYPES.includes(projectType.trim())) {
-      return res.status(400).json({ message: 'Please select a valid project type.' });
+    const validated = validateReviewFields(req.body);
+    if (validated.error) {
+      return res.status(400).json({ message: validated.error });
     }
 
     const review = await Review.create({
-      name: name.trim(),
-      role: role.trim(),
-      rating: stars,
-      projectType: projectType.trim(),
-      experience: experience.trim(),
-      published: false,
+      ...validated,
+      published: true,
     });
 
-    res.status(201).json({ message: 'Thank you! Your review will appear after we approve it.', id: review._id });
+    res.status(201).json({ message: 'Thank you! Your review is now live.', id: review._id });
   } catch (err) {
     console.error('Review submission error:', err);
     res.status(500).json({ message: 'Server error. Please try again later.' });
@@ -73,6 +81,52 @@ router.get('/all', requireAuth, requireAdmin, async (req, res) => {
   } catch (err) {
     console.error('Admin review fetch error:', err);
     res.status(500).json({ message: 'Failed to load reviews.' });
+  }
+});
+
+router.post('/admin', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const validated = validateReviewFields(req.body);
+    if (validated.error) {
+      return res.status(400).json({ message: validated.error });
+    }
+
+    const published = typeof req.body.published === 'boolean' ? req.body.published : true;
+
+    const review = await Review.create({
+      ...validated,
+      published,
+    });
+
+    res.status(201).json({ review });
+  } catch (err) {
+    console.error('Admin review create error:', err);
+    res.status(500).json({ message: 'Failed to create review.' });
+  }
+});
+
+router.put('/:id', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const validated = validateReviewFields(req.body);
+    if (validated.error) {
+      return res.status(400).json({ message: validated.error });
+    }
+
+    const update = { ...validated };
+    if (typeof req.body.published === 'boolean') {
+      update.published = req.body.published;
+    }
+
+    const review = await Review.findByIdAndUpdate(req.params.id, update, { new: true }).lean();
+
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found.' });
+    }
+
+    res.json({ review });
+  } catch (err) {
+    console.error('Review update error:', err);
+    res.status(500).json({ message: 'Failed to update review.' });
   }
 });
 

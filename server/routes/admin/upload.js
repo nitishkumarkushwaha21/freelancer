@@ -57,6 +57,10 @@ router.post(
     // Configure on every request so env var changes take effect without restart
     configureCloudinary();
 
+    // #region agent log
+    fetch('http://127.0.0.1:7703/ingest/d3422f13-36d1-4666-b098-9f3a07eacf7a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'26e869'},body:JSON.stringify({sessionId:'26e869',runId:'upload-attempt',hypothesisId:'H1-H2',location:'upload.js:pre-upload',message:'upload attempt start',data:{cloud_name:process.env.CLOUDINARY_CLOUD_NAME,api_key_prefix:process.env.CLOUDINARY_API_KEY?.slice(0,4),secret_len:process.env.CLOUDINARY_API_SECRET?.length,file_size:req.file?.size,mimetype:req.file?.mimetype},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+
     try {
       // Convert buffer to base64 data URI — works reliably across all cloudinary SDK versions
       const b64 = req.file.buffer.toString('base64');
@@ -67,11 +71,19 @@ router.post(
         resource_type: 'image',
       });
 
+      // #region agent log
+      fetch('http://127.0.0.1:7703/ingest/d3422f13-36d1-4666-b098-9f3a07eacf7a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'26e869'},body:JSON.stringify({sessionId:'26e869',runId:'upload-attempt',hypothesisId:'H1',location:'upload.js:success',message:'cloudinary upload success',data:{public_id:result.public_id,url_prefix:result.secure_url?.slice(0,50)},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
+
       res.json({ url: result.secure_url, public_id: result.public_id });
     } catch (err) {
       console.error('Cloudinary upload error:', err);
+      const detail = err.error?.message || err.message || 'Unknown error';
+      // #region agent log
+      fetch('http://127.0.0.1:7703/ingest/d3422f13-36d1-4666-b098-9f3a07eacf7a',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'26e869'},body:JSON.stringify({sessionId:'26e869',runId:'upload-attempt',hypothesisId:'H1-H3',location:'upload.js:error',message:'cloudinary upload failed',data:{detail,http_code:err.http_code,error_msg:err.error?.message},timestamp:Date.now()})}).catch(()=>{});
+      // #endregion
       res.status(500).json({
-        message: `Image upload failed: ${err.message || 'Unknown error'}`,
+        message: `Image upload failed: ${detail}`,
         http_code: err.http_code,
       });
     }

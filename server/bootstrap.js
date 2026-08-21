@@ -92,7 +92,7 @@ const projects = [
       'Dynamic class schedule with live spot counts',
       'Trial booking form saves to database and decrements spots',
     ],
-    liveUrl: process.env.ROOT_RISE_URL || 'http://localhost:5174',
+    liveUrl: process.env.ROOT_RISE_URL || 'http://localhost:3000',
     sortOrder: 0,
   },
   {
