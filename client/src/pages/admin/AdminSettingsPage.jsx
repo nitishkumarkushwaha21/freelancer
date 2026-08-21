@@ -157,12 +157,12 @@ export default function AdminSettingsPage() {
         <h3 className="admin-section-title">Pricing</h3>
         <label>
           Starting amount
-          <AdminFieldHint>Price shown in the home page pricing band, e.g. ₹5,000.</AdminFieldHint>
+          <AdminFieldHint>Starting price shown on the home page — use “from” framing, e.g. ₹5,000.</AdminFieldHint>
           <input value={form.pricingAmount} onChange={set('pricingAmount')} placeholder="₹5,000" />
         </label>
         <label>
           Pricing features (one per line)
-          <AdminFieldHint>Bullet list of what is included in the starting package.</AdminFieldHint>
+          <AdminFieldHint>What&apos;s included at the starting tier — keep bullets short and specific.</AdminFieldHint>
           <textarea rows={4} value={form.pricingFeaturesText} onChange={set('pricingFeaturesText')} />
         </label>
 

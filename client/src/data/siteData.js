@@ -160,10 +160,10 @@ export const team = [
 ];
 
 export const pricingFeatures = [
-  'Custom design, not a theme',
-  'Mobile-ready, fast-loading',
-  '7-day delivery on standard scope',
-  'Direct access to both devs',
+  'Custom design — no templates',
+  'Mobile-ready, fast-loading build',
+  'Standard landing pages from one week',
+  'Direct access to both developers',
 ];
 
 /** Only published testimonials render on the site. */
@@ -180,7 +180,7 @@ export const faqItems = [
     num: '02',
     question: "What's included in the starting price?",
     answer:
-      'A custom-designed, mobile-ready site built for your specific business — not a stock template. Final price depends on pages and features, and we always quote before starting.',
+      'A custom-designed, mobile-ready site for your business — not a stock template. Our home page shows a starting price for standard landing pages; final scope and quote are always confirmed before work begins.',
   },
   {
     num: '03',

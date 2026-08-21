@@ -679,19 +679,60 @@ section {
 
 .price-tag {
   font-family: 'Anton', sans-serif;
-  font-size: 56px;
+  font-size: 44px;
   color: var(--white);
+  line-height: 1.1;
 }
 
-.price-tag span {
-  color: var(--red);
+.price-tag-suffix {
+  font-size: 0.55em;
+  color: var(--gray);
+  margin-left: 2px;
+}
+
+.pricing-price-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .pricing-band .price-sub {
   color: var(--gray);
   font-size: 14px;
-  margin-top: 6px;
-  font-family: 'JetBrains Mono', monospace;
+  margin-top: 0;
+  font-family: inherit;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.price-note {
+  margin: 8px 0 0;
+  max-width: 280px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--gray-dim);
+}
+
+.pricing-band .pricing-cta {
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .pricing-band {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    gap: 28px;
+  }
+
+  .pricing-band .pricing-cta {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .price-note {
+    max-width: none;
+  }
 }
 
 .price-list {
