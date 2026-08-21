@@ -219,7 +219,7 @@ const faqItems = [
     num: '02',
     question: "What's included in the starting price?",
     answer:
-      'A custom-designed, mobile-ready site built for your specific business — not a stock template. Final price depends on pages and features, and we always quote before starting.',
+      'A custom-designed, mobile-ready site for your business — not a stock template. Our home page shows a starting price for standard landing pages; final scope and quote are always confirmed before work begins.',
     sortOrder: 1,
   },
   {
@@ -249,10 +249,10 @@ const settingsData = {
   projectCategories,
   pricingAmount: '₹5,000',
   pricingFeatures: [
-    'Custom design, not a theme',
-    'Mobile-ready, fast-loading',
-    '7-day delivery on standard scope',
-    'Direct access to both devs',
+    'Custom design — no templates',
+    'Mobile-ready, fast-loading build',
+    'Standard landing pages from one week',
+    'Direct access to both developers',
   ],
   contactProjectTypes: ['Landing Page', 'Portfolio Site', 'E-commerce', 'Web App', 'Other'],
   contactBudgetRanges: ['Under ₹10,000', '₹10,000 – ₹25,000', '₹25,000 – ₹50,000', '₹50,000+'],
