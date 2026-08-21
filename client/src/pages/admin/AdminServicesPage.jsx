@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import AdminModal from '../../components/admin/AdminModal';
+import AdminFieldHint from '../../components/admin/AdminFieldHint';
+import { useAdminFormDraft } from '../../hooks/useAdminFormDraft';
 import {
   createService,
   deleteService,
@@ -9,8 +11,25 @@ import {
 
 const emptyService = { icon: '▣', title: '', description: '', sortOrder: 0, published: true };
 
-function ServiceForm({ initial, onSave, onCancel, saving }) {
-  const [form, setForm] = useState({ ...emptyService, ...initial });
+function buildServiceFormData(initial) {
+  return { ...emptyService, ...initial };
+}
+
+function ServiceForm({ initial, entityId, isNew, onSave, onCancel, saving, onDraftState }) {
+  const [form, setForm] = useState(() => buildServiceFormData(initial));
+
+  const { isDirty, clearDraft } = useAdminFormDraft({
+    section: 'services',
+    mode: isNew ? 'new' : 'edit',
+    entityId,
+    initialData: buildServiceFormData(initial),
+    form,
+    setForm,
+  });
+
+  useEffect(() => {
+    onDraftState?.({ isDirty, clearDraft });
+  }, [isDirty, clearDraft, onDraftState]);
 
   const set = (field) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -27,6 +46,7 @@ function ServiceForm({ initial, onSave, onCancel, saving }) {
     >
       <label>
         Icon
+        <AdminFieldHint>Single character or emoji displayed on the service card.</AdminFieldHint>
         <input value={form.icon} onChange={set('icon')} />
       </label>
       <label>
@@ -35,6 +55,7 @@ function ServiceForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label>
         Sort order
+        <AdminFieldHint>Controls display order in the home “What We Build” section.</AdminFieldHint>
         <input type="number" value={form.sortOrder} onChange={set('sortOrder')} />
       </label>
       <label>
@@ -43,7 +64,10 @@ function ServiceForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label className="admin-form-check">
         <input type="checkbox" checked={form.published} onChange={set('published')} />
-        Published
+        <span>
+          Published
+          <AdminFieldHint>Hidden services are not shown on the home page.</AdminFieldHint>
+        </span>
       </label>
       <div className="admin-form-actions">
         <button type="button" className="admin-btn admin-btn-outline" onClick={onCancel}>Cancel</button>
@@ -62,6 +86,29 @@ export default function AdminServicesPage() {
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [formDirty, setFormDirty] = useState(false);
+  const clearDraftRef = useRef(() => {});
+
+  const handleDraftState = useCallback(({ isDirty, clearDraft }) => {
+    setFormDirty(isDirty);
+    clearDraftRef.current = clearDraft;
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setCreating(false);
+    setEditing(null);
+    setFormDirty(false);
+  }, []);
+
+  const requestClose = useCallback(() => {
+    if (formDirty) {
+      const keepDraft = window.confirm(
+        'You have unsaved changes. Close this form? Your draft will be kept for this session.',
+      );
+      if (!keepDraft) return;
+    }
+    closeForm();
+  }, [formDirty, closeForm]);
 
   const load = async () => {
     setLoading(true);
@@ -88,6 +135,8 @@ export default function AdminServicesPage() {
       else await createService(payload);
       setEditing(null);
       setCreating(false);
+      clearDraftRef.current();
+      setFormDirty(false);
       await load();
     } catch (err) {
       setError(err.message);
@@ -163,19 +212,17 @@ export default function AdminServicesPage() {
       <AdminModal
         title={editing ? 'Edit service' : 'New service'}
         open={creating || editing}
-        onClose={() => {
-          setCreating(false);
-          setEditing(null);
-        }}
+        onClose={requestClose}
       >
         <ServiceForm
+          key={editing?._id || (creating ? 'new' : 'closed')}
           initial={editing || emptyService}
+          entityId={editing?._id}
+          isNew={!editing}
           onSave={handleSave}
-          onCancel={() => {
-            setCreating(false);
-            setEditing(null);
-          }}
+          onCancel={requestClose}
           saving={saving}
+          onDraftState={handleDraftState}
         />
       </AdminModal>
     </div>

@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import AdminModal from '../../components/admin/AdminModal';
+import AdminFieldHint from '../../components/admin/AdminFieldHint';
+import { useAdminFormDraft } from '../../hooks/useAdminFormDraft';
 import {
   createProcessStep,
   deleteProcessStep,
@@ -9,8 +11,25 @@ import {
 
 const emptyStep = { num: '', title: '', description: '', sortOrder: 0 };
 
-function StepForm({ initial, onSave, onCancel, saving }) {
-  const [form, setForm] = useState({ ...emptyStep, ...initial });
+function buildStepFormData(initial) {
+  return { ...emptyStep, ...initial };
+}
+
+function StepForm({ initial, entityId, isNew, onSave, onCancel, saving, onDraftState }) {
+  const [form, setForm] = useState(() => buildStepFormData(initial));
+
+  const { isDirty, clearDraft } = useAdminFormDraft({
+    section: 'process',
+    mode: isNew ? 'new' : 'edit',
+    entityId,
+    initialData: buildStepFormData(initial),
+    form,
+    setForm,
+  });
+
+  useEffect(() => {
+    onDraftState?.({ isDirty, clearDraft });
+  }, [isDirty, clearDraft, onDraftState]);
 
   const set = (field) => (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
 
@@ -24,6 +43,7 @@ function StepForm({ initial, onSave, onCancel, saving }) {
     >
       <label>
         Number
+        <AdminFieldHint>Step label shown on the card, e.g. 01, 02, 03.</AdminFieldHint>
         <input value={form.num} onChange={set('num')} placeholder="01" />
       </label>
       <label>
@@ -32,6 +52,7 @@ function StepForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label>
         Sort order
+        <AdminFieldHint>Order of steps in the home “How It Works” section.</AdminFieldHint>
         <input type="number" value={form.sortOrder} onChange={set('sortOrder')} />
       </label>
       <label>
@@ -55,6 +76,29 @@ export default function AdminProcessPage() {
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [formDirty, setFormDirty] = useState(false);
+  const clearDraftRef = useRef(() => {});
+
+  const handleDraftState = useCallback(({ isDirty, clearDraft }) => {
+    setFormDirty(isDirty);
+    clearDraftRef.current = clearDraft;
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setCreating(false);
+    setEditing(null);
+    setFormDirty(false);
+  }, []);
+
+  const requestClose = useCallback(() => {
+    if (formDirty) {
+      const keepDraft = window.confirm(
+        'You have unsaved changes. Close this form? Your draft will be kept for this session.',
+      );
+      if (!keepDraft) return;
+    }
+    closeForm();
+  }, [formDirty, closeForm]);
 
   const load = async () => {
     setLoading(true);
@@ -81,6 +125,8 @@ export default function AdminProcessPage() {
       else await createProcessStep(payload);
       setEditing(null);
       setCreating(false);
+      clearDraftRef.current();
+      setFormDirty(false);
       await load();
     } catch (err) {
       setError(err.message);
@@ -152,19 +198,17 @@ export default function AdminProcessPage() {
       <AdminModal
         title={editing ? 'Edit process step' : 'New process step'}
         open={creating || editing}
-        onClose={() => {
-          setCreating(false);
-          setEditing(null);
-        }}
+        onClose={requestClose}
       >
         <StepForm
+          key={editing?._id || (creating ? 'new' : 'closed')}
           initial={editing || emptyStep}
+          entityId={editing?._id}
+          isNew={!editing}
           onSave={handleSave}
-          onCancel={() => {
-            setCreating(false);
-            setEditing(null);
-          }}
+          onCancel={requestClose}
           saving={saving}
+          onDraftState={handleDraftState}
         />
       </AdminModal>
     </div>

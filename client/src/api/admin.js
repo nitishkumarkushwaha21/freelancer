@@ -67,6 +67,20 @@ export async function updateReviewPublished(id, published) {
   });
 }
 
+export async function createReview(data) {
+  return adminFetch('/api/reviews/admin', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateReview(id, data) {
+  return adminFetch(`/api/reviews/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
 export async function deleteReview(id) {
   return adminFetch(`/api/reviews/${id}`, { method: 'DELETE' });
 }

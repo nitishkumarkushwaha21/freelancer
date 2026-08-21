@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import PasswordInput from '../../components/admin/PasswordInput';
+import ThemeToggle from '../../components/ui/ThemeToggle';
 
 export default function AdminLoginPage() {
   const { isAuthenticated, loading, login } = useAuth();
@@ -41,6 +43,9 @@ export default function AdminLoginPage() {
 
   return (
     <div className="admin-page admin-login-page">
+      <div className="admin-login-theme">
+        <ThemeToggle />
+      </div>
       <div className="admin-login-card">
         <p className="admin-eyebrow">BuiltByWho</p>
         <h1>Admin login</h1>
@@ -60,13 +65,10 @@ export default function AdminLoginPage() {
           </label>
           <label>
             Password
-            <input
-              type="password"
-              autoComplete="current-password"
+            <PasswordInput
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
             />
           </label>
 

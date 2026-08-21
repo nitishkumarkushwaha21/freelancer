@@ -11,7 +11,7 @@ function formatDate(iso) {
   });
 }
 
-function ReviewRow({ review, onTogglePublished, onDelete, busy }) {
+function ReviewRow({ review, onEdit, onTogglePublished, onDelete, busy }) {
   const [expanded, setExpanded] = useState(false);
   const text = review.experience;
   const truncated = text.length > 100 ? `${text.slice(0, 100)}…` : text;
@@ -27,7 +27,7 @@ function ReviewRow({ review, onTogglePublished, onDelete, busy }) {
       <td>{review.projectType}</td>
       <td>
         <span className={`admin-badge${review.published ? ' admin-badge-live' : ''}`}>
-          {review.published ? 'Live' : 'Pending'}
+          {review.published ? 'Live' : 'Hidden'}
         </span>
       </td>
       <td className="admin-cell-message">{expanded ? text : truncated}</td>
@@ -37,6 +37,14 @@ function ReviewRow({ review, onTogglePublished, onDelete, busy }) {
             {expanded ? 'Less' : 'More'}
           </button>
         )}
+        <button
+          type="button"
+          className="admin-btn admin-btn-outline admin-btn-sm"
+          disabled={busy}
+          onClick={() => onEdit(review)}
+        >
+          Edit
+        </button>
         <button
           type="button"
           className="admin-btn admin-btn-outline admin-btn-sm"
@@ -58,12 +66,12 @@ function ReviewRow({ review, onTogglePublished, onDelete, busy }) {
   );
 }
 
-export default function ReviewsTable({ reviews, onTogglePublished, onDelete, busyId }) {
+export default function ReviewsTable({ reviews, onEdit, onTogglePublished, onDelete, busyId }) {
   if (!reviews.length) {
     return (
       <div className="admin-empty">
         <h2>No reviews yet</h2>
-        <p className="admin-muted">User submissions from /reviews will appear here for approval.</p>
+        <p className="admin-muted">User submissions from /reviews appear here automatically. You can edit, hide, or delete any review.</p>
       </div>
     );
   }
@@ -88,6 +96,7 @@ export default function ReviewsTable({ reviews, onTogglePublished, onDelete, bus
             <ReviewRow
               key={review._id}
               review={review}
+              onEdit={onEdit}
               onTogglePublished={onTogglePublished}
               onDelete={onDelete}
               busy={busyId === review._id}

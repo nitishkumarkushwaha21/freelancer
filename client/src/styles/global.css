@@ -757,6 +757,35 @@ section {
   text-align: center;
 }
 
+.testi-submit {
+  margin-top: 56px;
+  padding-top: 48px;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.testi-submit-intro h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+  text-transform: none;
+}
+
+.testi-submit-intro p {
+  color: var(--gray);
+  line-height: 1.65;
+  max-width: 36ch;
+}
+
+@media (max-width: 860px) {
+  .testi-submit {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
 .review-card .star-rating {
   margin-bottom: 14px;
 }

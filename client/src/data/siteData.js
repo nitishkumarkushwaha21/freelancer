@@ -49,7 +49,7 @@ export const projects = [
       'Dynamic class schedule with live spot counts',
       'Trial booking form saves to database and decrements spots',
     ],
-    liveUrl: import.meta.env.VITE_ROOT_RISE_URL || 'http://localhost:5174',
+    liveUrl: import.meta.env.VITE_ROOT_RISE_URL || 'http://localhost:3000',
   },
   {
     slug: 'project-slot-02',

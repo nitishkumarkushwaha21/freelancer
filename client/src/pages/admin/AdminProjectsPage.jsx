@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import AdminModal from '../../components/admin/AdminModal';
+import AdminFieldHint from '../../components/admin/AdminFieldHint';
 import ImageUpload from '../../components/admin/ImageUpload';
+import { useAdminFormDraft } from '../../hooks/useAdminFormDraft';
 import {
   createProject,
   deleteProject,
@@ -26,15 +28,32 @@ const emptyProject = {
   sortOrder: 0,
 };
 
-function ProjectForm({ initial, onSave, onCancel, saving }) {
-  const [form, setForm] = useState({
+function buildProjectFormData(initial) {
+  return {
     ...emptyProject,
     ...initial,
     stack: initial?.stack ?? [],
     results: initial?.results ?? [],
     liveUrl: initial?.liveUrl || '',
     imageUrl: initial?.imageUrl || '',
+  };
+}
+
+function ProjectForm({ initial, entityId, isNew, onSave, onCancel, saving, onDraftState }) {
+  const [form, setForm] = useState(() => buildProjectFormData(initial));
+
+  const { isDirty, clearDraft } = useAdminFormDraft({
+    section: 'projects',
+    mode: isNew ? 'new' : 'edit',
+    entityId,
+    initialData: buildProjectFormData(initial),
+    form,
+    setForm,
   });
+
+  useEffect(() => {
+    onDraftState?.({ isDirty, clearDraft });
+  }, [isDirty, clearDraft, onDraftState]);
 
   const set = (field) => (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -70,14 +89,17 @@ function ProjectForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label>
         Slug
+        <AdminFieldHint>URL path for /work/your-slug. Leave blank to auto-generate from the title.</AdminFieldHint>
         <input value={form.slug} onChange={set('slug')} placeholder="auto-generated from title" />
       </label>
       <label>
         Tag
+        <AdminFieldHint>Short label on project cards, e.g. “SaaS” or “Brand site”.</AdminFieldHint>
         <input value={form.tag} onChange={set('tag')} />
       </label>
       <label>
         Category
+        <AdminFieldHint>Used to filter projects on the public Work page.</AdminFieldHint>
         <select value={form.category} onChange={set('category')}>
           <option value="landing">Landing</option>
           <option value="ecommerce">E-commerce</option>
@@ -95,14 +117,17 @@ function ProjectForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label>
         Sort order
+        <AdminFieldHint>Lower numbers appear first in project lists.</AdminFieldHint>
         <input type="number" value={form.sortOrder} onChange={set('sortOrder')} />
       </label>
       <label>
         Live URL
+        <AdminFieldHint>Public link when visitors open the project case study.</AdminFieldHint>
         <input value={form.liveUrl} onChange={set('liveUrl')} placeholder="https://..." />
       </label>
       <label>
         Image
+        <AdminFieldHint>Thumbnail on home and Work page cards. Upload or paste an image URL.</AdminFieldHint>
         <ImageUpload
           value={form.imageUrl}
           onChange={(url) => setForm((p) => ({ ...p, imageUrl: url }))}
@@ -110,6 +135,7 @@ function ProjectForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label className="admin-form-full">
         Stack (comma-separated)
+        <AdminFieldHint>Technologies shown on the case study page, e.g. React, Node, MongoDB.</AdminFieldHint>
         <input
           value={form.stackText ?? form.stack.join(', ')}
           onChange={(e) => setForm((p) => ({ ...p, stackText: e.target.value }))}
@@ -117,14 +143,17 @@ function ProjectForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label className="admin-form-full">
         Problem
+        <AdminFieldHint>Client challenge or pain point for the case study narrative.</AdminFieldHint>
         <textarea rows={3} value={form.problem} onChange={set('problem')} />
       </label>
       <label className="admin-form-full">
         Solution
+        <AdminFieldHint>How you solved the problem — approach, build, and delivery.</AdminFieldHint>
         <textarea rows={3} value={form.solution} onChange={set('solution')} />
       </label>
       <label className="admin-form-full">
         Results (one per line)
+        <AdminFieldHint>Outcome bullets, e.g. “40% faster load time”. One result per line.</AdminFieldHint>
         <textarea
           rows={4}
           value={form.resultsText ?? form.results.join('\n')}
@@ -133,11 +162,17 @@ function ProjectForm({ initial, onSave, onCancel, saving }) {
       </label>
       <label className="admin-form-check">
         <input type="checkbox" checked={form.featured} onChange={set('featured')} />
-        Featured on home
+        <span>
+          Featured on home
+          <AdminFieldHint>Highlights this project in the home page portfolio section.</AdminFieldHint>
+        </span>
       </label>
       <label className="admin-form-check">
         <input type="checkbox" checked={form.published} onChange={set('published')} />
-        Published
+        <span>
+          Published
+          <AdminFieldHint>Hidden projects stay off the public site until published.</AdminFieldHint>
+        </span>
       </label>
       <div className="admin-form-actions admin-form-full">
         <button type="button" className="admin-btn admin-btn-outline" onClick={onCancel}>
@@ -158,6 +193,29 @@ export default function AdminProjectsPage() {
   const [editing, setEditing] = useState(null);
   const [creating, setCreating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [formDirty, setFormDirty] = useState(false);
+  const clearDraftRef = useRef(() => {});
+
+  const handleDraftState = useCallback(({ isDirty, clearDraft }) => {
+    setFormDirty(isDirty);
+    clearDraftRef.current = clearDraft;
+  }, []);
+
+  const closeForm = useCallback(() => {
+    setCreating(false);
+    setEditing(null);
+    setFormDirty(false);
+  }, []);
+
+  const requestClose = useCallback(() => {
+    if (formDirty) {
+      const keepDraft = window.confirm(
+        'You have unsaved changes. Close this form? Your draft will be kept for this session.',
+      );
+      if (!keepDraft) return;
+    }
+    closeForm();
+  }, [formDirty, closeForm]);
 
   const load = async () => {
     setLoading(true);
@@ -187,6 +245,8 @@ export default function AdminProjectsPage() {
       }
       setEditing(null);
       setCreating(false);
+      clearDraftRef.current();
+      setFormDirty(false);
       await load();
     } catch (err) {
       setError(err.message);
@@ -279,20 +339,18 @@ export default function AdminProjectsPage() {
       <AdminModal
         title={editing ? 'Edit project' : 'New project'}
         open={creating || editing}
-        onClose={() => {
-          setCreating(false);
-          setEditing(null);
-        }}
+        onClose={requestClose}
         wide
       >
         <ProjectForm
+          key={editing?._id || (creating ? 'new' : 'closed')}
           initial={editing || emptyProject}
+          entityId={editing?._id}
+          isNew={!editing}
           onSave={handleSave}
-          onCancel={() => {
-            setCreating(false);
-            setEditing(null);
-          }}
+          onCancel={requestClose}
           saving={saving}
+          onDraftState={handleDraftState}
         />
       </AdminModal>
     </div>

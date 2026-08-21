@@ -1,5 +1,6 @@
 import { Link, NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import ThemeToggle from '../ui/ThemeToggle';
 
 const navItems = [
   { to: '/admin/projects', label: 'Projects' },
@@ -20,31 +21,32 @@ export default function AdminLayout() {
     <div className="admin-shell">
       <header className="admin-header">
         <div className="admin-header-inner">
-          <div>
+          <div className="admin-header-top">
             <Link to="/admin/projects" className="admin-brand">
               BuiltByWho <span>Admin</span>
             </Link>
-            <nav className="admin-nav">
-              {navItems.map((item) => (
-                <NavLink
-                  key={item.to}
-                  to={item.to}
-                  className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
-            </nav>
+            <div className="admin-header-actions">
+              <ThemeToggle />
+              <span className="admin-user">{user?.email}</span>
+              <button type="button" className="admin-btn admin-btn-outline" onClick={logout}>
+                Log out
+              </button>
+              <a href="/" className="admin-btn admin-btn-ghost">
+                View site
+              </a>
+            </div>
           </div>
-          <div className="admin-header-actions">
-            <span className="admin-user">{user?.email}</span>
-            <button type="button" className="admin-btn admin-btn-outline" onClick={logout}>
-              Log out
-            </button>
-            <a href="/" className="admin-btn admin-btn-ghost">
-              View site
-            </a>
-          </div>
+          <nav className="admin-nav" aria-label="Admin sections">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) => `admin-nav-link${isActive ? ' active' : ''}`}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
         </div>
       </header>
       <main className="admin-main">

@@ -47,7 +47,7 @@ export default function ReviewForm({ onSubmitted }) {
     return (
       <div className="form-success">
         <h3>Review submitted.</h3>
-        <p>Thanks for sharing your experience. We&apos;ll publish it after a quick check.</p>
+        <p>Thanks for sharing your experience. Your review is live on the site.</p>
         <button type="button" className="btn btn-outline" onClick={() => setStatus('idle')}>
           Submit another
         </button>
